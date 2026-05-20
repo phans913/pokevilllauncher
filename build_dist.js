@@ -78,7 +78,15 @@ function copyRecursiveSync(source, target) {
 }
 
 function normalizeResourcepackName(fileName) {
-    return fileName === 'pokevill (2).zip' ? 'pokevill.zip' : fileName
+    if(fileName === 'pokevill (2).zip') {
+        return 'pokevill.zip'
+    }
+
+    if(fileName === 'BM Jua.zip') {
+        return 'BM.Jua.zip'
+    }
+
+    return fileName
 }
 
 function syncModpackContent(bundleRoot) {

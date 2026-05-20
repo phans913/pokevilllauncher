@@ -101,7 +101,7 @@ function hasRequiredBundleFiles(serverId) {
         { path: nodePath.join(commonModStore, 'mods', 'worldedit-mod-7.3.8.jar'), size: 6222854 },
         { path: nodePath.join(instanceDir, 'resourcepacks', 'apinametag-name-display-arclight-1.21.1.zip'), size: 463264 },
         { path: nodePath.join(instanceDir, 'resourcepacks', 'BetterHangulFont.zip'), size: 80065 },
-        { path: nodePath.join(instanceDir, 'resourcepacks', 'BM Jua.zip'), size: 424483 },
+        { path: nodePath.join(instanceDir, 'resourcepacks', 'BM.Jua.zip'), size: 424483 },
         { path: nodePath.join(instanceDir, 'resourcepacks', 'build.zip'), size: 4268569 },
         { path: nodePath.join(instanceDir, 'resourcepacks', 'MenuResourcePack-v1.0.4.zip'), size: 186128 },
         { path: nodePath.join(instanceDir, 'resourcepacks', 'pokevill.zip'), size: 27338897 }

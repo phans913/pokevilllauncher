@@ -31,7 +31,7 @@
           "artifact": {
             "size": 686,
             "MD5": null,
-            "hash": "95f6fcd8a39c133576d74ad7ed0d8791a134f598",
+            "hash": "6f8be5fb70a93b47ca3203b0f7d3a67b74889011",
             "path": "net/neoforged/neoforge/21.1.220/neoforge-21.1.220.jar",
             "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/dummy.jar"
           },
@@ -787,15 +787,15 @@
           }
         },
         {
-          "id": "resourcepacksBMJua.zip",
-          "name": "BM Jua.zip",
+          "id": "resourcepacksBM.Jua.zip",
+          "name": "BM.Jua.zip",
           "type": "File",
           "artifact": {
             "size": 424483,
             "MD5": null,
             "hash": "2bd3306481dd1a5432cd9818137f0597f2573b99",
-            "path": "resourcepacks/BM Jua.zip",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/BM%20Jua.zip"
+            "path": "resourcepacks/BM.Jua.zip",
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/BM.Jua.zip"
           }
         },
         {
