@@ -2,7 +2,9 @@
  * Script for landing.ejs
  */
 // Requirements
-const fs = require('fs-extra');
+const AdmZip = require('adm-zip')
+const fs = require('fs-extra')
+const nodePath = require('path')
 const { URL }                 = require('url')
 const {
     MojangRestAPI,
@@ -42,6 +44,176 @@ const server_selection_button = document.getElementById('server_selection_button
 const user_text               = document.getElementById('user_text')
 
 const loggerLanding = LoggerUtil.getLogger('Landing')
+
+function getModpackBundleUrl() {
+    const bundleUrlPath = getBundledDefaultFilePath('modpack_bundle_url.txt')
+
+    if(bundleUrlPath == null || !fs.existsSync(bundleUrlPath)) {
+        return null
+    }
+
+    const bundleUrl = fs.readFileSync(bundleUrlPath, 'UTF-8').trim()
+
+    if(!bundleUrl || bundleUrl.startsWith('#')) {
+        return null
+    }
+
+    return bundleUrl
+}
+
+function getBundledDefaultFilePath(fileName) {
+    const candidatePaths = [
+        nodePath.join(__dirname, 'assets', 'defaults', fileName),
+        nodePath.join(__dirname, '..', 'defaults', fileName),
+        nodePath.join(__dirname, '..', '..', 'defaults', fileName)
+    ]
+
+    return candidatePaths.find(candidatePath => fs.existsSync(candidatePath))
+}
+
+function getModpackBundleCachePaths() {
+    const cacheDir = nodePath.join(ConfigManager.getLauncherDirectory(), 'cache')
+
+    return {
+        cacheDir,
+        bundlePath: nodePath.join(cacheDir, 'pokevill-modpack-bundle.zip'),
+        markerPath: nodePath.join(cacheDir, 'pokevill-modpack-bundle.json')
+    }
+}
+
+function hasRequiredBundleFiles(serverId) {
+    const commonLibraries = nodePath.join(ConfigManager.getCommonDirectory(), 'libraries')
+    const commonModStore = nodePath.join(ConfigManager.getCommonDirectory(), 'modstore')
+    const commonVersions = nodePath.join(ConfigManager.getCommonDirectory(), 'versions')
+    const instanceDir = nodePath.join(ConfigManager.getInstanceDirectory(), serverId)
+    const requiredFiles = [
+        { path: nodePath.join(commonLibraries, 'net', 'neoforged', 'neoforge', '21.1.220', 'neoforge-21.1.220.jar') },
+        { path: nodePath.join(commonVersions, 'neoforge-21.1.220', 'neoforge-21.1.220.json') },
+        { path: nodePath.join(commonModStore, 'mods', 'Pixelmon-1.21.1-9.3.14-universal.jar'), size: 392190454 },
+        // Iris / Sodium 번들이 추가되면 이전 캐시가 "완료"로 오판되지 않도록 필수 파일에 포함한다.
+        { path: nodePath.join(commonModStore, 'mods', 'iris-neoforge-1.8.12+mc1.21.1.jar'), size: 2438548 },
+        { path: nodePath.join(commonModStore, 'mods', 'pamhc2crops-NEOFORGE-1.21.1-1.0.0.jar'), size: 1047144 },
+        { path: nodePath.join(commonModStore, 'mods', 'pokemonquest-1.0.20.jar'), size: 2087921 },
+        { path: nodePath.join(commonModStore, 'mods', 'pokevill-1.0.0.jar'), size: 89044 },
+        { path: nodePath.join(commonModStore, 'mods', 'pokevillgacha-1.0.0.jar'), size: 26198 },
+        { path: nodePath.join(commonModStore, 'mods', 'sodium-neoforge-0.6.13+mc1.21.1.jar'), size: 1162994 },
+        { path: nodePath.join(commonModStore, 'mods', 'voicechat-neoforge-1.21.1-2.6.12.jar'), size: 4890489 },
+        { path: nodePath.join(commonModStore, 'mods', 'worldedit-mod-7.3.8.jar'), size: 6222854 },
+        { path: nodePath.join(instanceDir, 'resourcepacks', 'apinametag-name-display-arclight-1.21.1.zip'), size: 463264 },
+        { path: nodePath.join(instanceDir, 'resourcepacks', 'BetterHangulFont.zip'), size: 80065 },
+        { path: nodePath.join(instanceDir, 'resourcepacks', 'BM Jua.zip'), size: 424483 },
+        { path: nodePath.join(instanceDir, 'resourcepacks', 'build.zip'), size: 4268569 },
+        { path: nodePath.join(instanceDir, 'resourcepacks', 'MenuResourcePack-v1.0.4.zip'), size: 186128 },
+        { path: nodePath.join(instanceDir, 'resourcepacks', 'pokevill.zip'), size: 27338897 }
+    ]
+
+    return requiredFiles.every(file => fs.existsSync(file.path) && (file.size == null || fs.statSync(file.path).size === file.size))
+}
+
+function isModpackBundleInstalled(serverId, bundleUrl) {
+    const { markerPath } = getModpackBundleCachePaths()
+
+    if(!fs.existsSync(markerPath) || !hasRequiredBundleFiles(serverId)) {
+        return false
+    }
+
+    try {
+        const marker = fs.readJsonSync(markerPath)
+        return marker.url === bundleUrl
+    } catch(_err) {
+        return false
+    }
+}
+
+async function ensureModpackBundle(serverId, loggerLaunchSuite, force = false) {
+    const bundleUrl = getModpackBundleUrl()
+
+    if(bundleUrl == null) {
+        return false
+    }
+
+    if(!force && isModpackBundleInstalled(serverId, bundleUrl)) {
+        return false
+    }
+
+    const { cacheDir, bundlePath, markerPath } = getModpackBundleCachePaths()
+
+    loggerLaunchSuite.info('Downloading bundled modpack from configured URL.')
+    setLaunchDetails('포켓빌 모드팩 파일을 준비하는 중...')
+    setLaunchPercentage(0)
+
+    fs.ensureDirSync(cacheDir)
+    await downloadFile(bundleUrl, bundlePath, () => {})
+
+    loggerLaunchSuite.info('Extracting bundled modpack.')
+    setLaunchDetails('포켓빌 모드팩 파일을 적용하는 중...')
+
+    extractModpackBundle(bundlePath)
+
+    fs.writeJsonSync(markerPath, {
+        url: bundleUrl,
+        installedAt: new Date().toISOString()
+    })
+
+    return true
+}
+
+function shouldSkipModpackBundleEntry(entryName) {
+    return entryName === 'distribution.json'
+        || entryName === 'instances/pokevill/options.txt'
+        || entryName === 'instances/pokevill/servers.dat'
+}
+
+function resetManagedBundleDirectories(dataDirectory, zip) {
+    const entryNames = zip.getEntries()
+        .filter(entry => !entry.isDirectory)
+        .map(entry => entry.entryName.replace(/\\/g, '/'))
+
+    if(entryNames.some(entryName => entryName.startsWith('instances/pokevill/mods/'))) {
+        fs.emptyDirSync(nodePath.join(dataDirectory, 'instances', 'pokevill', 'mods'))
+        fs.emptyDirSync(nodePath.join(dataDirectory, 'common', 'modstore', 'mods'))
+    }
+
+    if(entryNames.some(entryName => entryName.startsWith('instances/pokevill/resourcepacks/'))) {
+        fs.emptyDirSync(nodePath.join(dataDirectory, 'instances', 'pokevill', 'resourcepacks'))
+    }
+}
+
+function extractModpackBundle(bundlePath) {
+    const zip = new AdmZip(bundlePath)
+    const dataDirectory = ConfigManager.getDataDirectory()
+    resetManagedBundleDirectories(dataDirectory, zip)
+
+    // distribution.json은 앱에 포함된 최신 파일을 쓰고, 번들 ZIP 안의 오래된 배포 정보는 캐시를 덮어쓰지 않게 무시한다.
+    // common/과 instances/는 실제 게임 데이터 폴더에 풀어야 Helios 검증이 통과한다.
+    for(const entry of zip.getEntries()) {
+        if(entry.isDirectory) {
+            continue
+        }
+
+        const entryName = entry.entryName.replace(/\\/g, '/')
+        let targetPath = null
+
+        if(shouldSkipModpackBundleEntry(entryName)) {
+            continue
+        } else if(entryName.startsWith('common/') || entryName.startsWith('instances/')) {
+            writeBundleEntry(entry, nodePath.join(dataDirectory, entryName))
+        }
+
+        if(entryName === 'common/libraries/net/neoforged/neoforge/21.1.220/version.json') {
+            targetPath = nodePath.join(dataDirectory, 'common', 'versions', 'neoforge-21.1.220', 'neoforge-21.1.220.json')
+            writeBundleEntry(entry, targetPath)
+        } else if(entryName.startsWith('instances/pokevill/mods/')) {
+            targetPath = nodePath.join(dataDirectory, 'common', 'modstore', entryName.replace('instances/pokevill/', ''))
+            writeBundleEntry(entry, targetPath)
+        }
+    }
+}
+
+function writeBundleEntry(entry, targetPath) {
+    fs.ensureDirSync(nodePath.dirname(targetPath))
+    fs.writeFileSync(targetPath, entry.getData())
+}
 
 /* Launch Progress Wrapper Functions */
 
@@ -130,14 +302,14 @@ document.getElementById('launch_button').addEventListener('click', async e => {
 
 // 스크린샷 버튼
 document.getElementById('screenshotsMediaButton').onclick = async e => {
-    const screenshotDir = path.join(
+    const screenshotDir = nodePath.join(
         ConfigManager.getInstanceDirectory(),
         ConfigManager.getSelectedServer(),
         'screenshots'
-    );
-    await fs.ensureDir(screenshotDir);
-    shell.openPath(screenshotDir);
-};
+    )
+    await fs.ensureDir(screenshotDir)
+    shell.openPath(screenshotDir)
+}
 
 // Bind settings button
 document.getElementById('settingsMediaButton').onclick = async e => {
@@ -490,6 +662,14 @@ async function dlAsync(login = true) {
     toggleLaunchArea(true)
     setLaunchPercentage(0, 100)
 
+    try {
+        await ensureModpackBundle(serv.rawServer.id, loggerLaunchSuite)
+    } catch(err) {
+        loggerLaunchSuite.error('Error while preparing bundled modpack.', err)
+        showLaunchFailure(Lang.queryJS('landing.dlAsync.errorDuringFileDownloadTitle'), err.message || Lang.queryJS('landing.dlAsync.seeConsoleForDetails'))
+        return
+    }
+
     const fullRepairModule = new FullRepair(
         ConfigManager.getCommonDirectory(),
         ConfigManager.getInstanceDirectory(),
@@ -523,6 +703,21 @@ async function dlAsync(login = true) {
         loggerLaunchSuite.error('Error during file validation.')
         showLaunchFailure(Lang.queryJS('landing.dlAsync.errorDuringFileVerificationTitle'), err.displayable || Lang.queryJS('landing.dlAsync.seeConsoleForDetails'))
         return
+    }
+
+    if(invalidFileCount > 0 && getModpackBundleUrl() != null) {
+        loggerLaunchSuite.info('Invalid files found after validation, reapplying bundled modpack.')
+        try {
+            await ensureModpackBundle(serv.rawServer.id, loggerLaunchSuite, true)
+            invalidFileCount = await fullRepairModule.verifyFiles(percent => {
+                setLaunchPercentage(percent)
+            })
+            setLaunchPercentage(100)
+        } catch(err) {
+            loggerLaunchSuite.error('Error while reapplying bundled modpack.', err)
+            showLaunchFailure(Lang.queryJS('landing.dlAsync.errorDuringFileDownloadTitle'), err.message || Lang.queryJS('landing.dlAsync.seeConsoleForDetails'))
+            return
+        }
     }
     
 

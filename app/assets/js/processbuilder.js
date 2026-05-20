@@ -46,6 +46,7 @@ class ProcessBuilder {
      */
     build(){
         fs.ensureDirSync(this.gameDir)
+        this.ensureInitialMinecraftDefaults()
         const tempNativePath = path.join(os.tmpdir(), ConfigManager.getTempNativeFolder(), crypto.pseudoRandomBytes(16).toString('hex'))
         process.throwDeprecation = true
         this.setupLiteLoader()
@@ -92,7 +93,7 @@ class ProcessBuilder {
         child.stderr.on('data', (data) => {
             data.trim().split('\n').forEach(x => console.log(`\x1b[31m[Minecraft]\x1b[0m ${x}`))
         })
-        child.on('close', (code, signal) => {
+        child.on('close', (code, _signal) => {
             logger.info('Exited with code', code)
             fs.remove(tempNativePath, (err) => {
                 if(err){
@@ -104,6 +105,73 @@ class ProcessBuilder {
         })
 
         return child
+    }
+
+    ensureInitialMinecraftDefaults() {
+        const markerPath = path.join(this.gameDir, '.pokevill-options-initialized.json')
+
+        if(fs.existsSync(markerPath)) {
+            return
+        }
+
+        // 이 구현의 의도는 사용자의 설정을 매 실행마다 덮지 않고, 포켓빌 런처 첫 실행 1회에만 기본값을 주입하는 것이다.
+        this.copyBundledDefaultFile('options.txt')
+        this.copyBundledDefaultFile('servers.dat')
+
+        fs.writeJsonSync(markerPath, {
+            server: this.server.rawServer.id,
+            launcherVersion: this.launcherVersion,
+            initializedAt: new Date().toISOString()
+        }, { spaces: 2 })
+        logger.info('Initial Minecraft defaults copied once:', markerPath)
+    }
+
+    copyBundledDefaultFile(fileName) {
+        const defaultPath = path.join(__dirname, '..', 'defaults', fileName)
+        const gamePath = path.join(this.gameDir, fileName)
+
+        if(fs.existsSync(defaultPath)) {
+            fs.copyFileSync(defaultPath, gamePath)
+            logger.info(`Default ${fileName} copied:`, gamePath)
+        }
+    }
+
+    ensureDefaultOptions() {
+        const defaultOptionsPath = path.join(__dirname, '..', 'defaults', 'options.txt')
+        const gameOptionsPath = path.join(this.gameDir, 'options.txt')
+
+        // 인스턴스가 처음 만들어졌을 때만 기본 조작키를 넣는다.
+        // 이미 options.txt가 있으면 유저가 게임 안에서 바꾼 키 설정을 존중해서 덮어쓰지 않는다.
+        if(fs.existsSync(defaultOptionsPath) && !fs.existsSync(gameOptionsPath)) {
+            fs.copyFileSync(defaultOptionsPath, gameOptionsPath)
+            logger.info('Default Minecraft options copied:', gameOptionsPath)
+        }
+    }
+
+    ensureRequiredResourcePacks() {
+        const gameOptionsPath = path.join(this.gameDir, 'options.txt')
+
+        if(!fs.existsSync(gameOptionsPath)) {
+            return
+        }
+
+        let optionsText = fs.readFileSync(gameOptionsPath, 'UTF-8')
+
+        // 런처로 접속할 때마다 포켓빌 리소스팩 두 개가 선택된 상태가 되도록 리소스팩 설정만 고정한다.
+        optionsText = this.replaceOrAppendOption(optionsText, 'resourcePacks', 'resourcePacks:["vanilla","mod_resources","file/pokevill.zip","file/build.zip"]')
+        optionsText = this.replaceOrAppendOption(optionsText, 'incompatibleResourcePacks', 'incompatibleResourcePacks:[]')
+
+        fs.writeFileSync(gameOptionsPath, optionsText, 'UTF-8')
+    }
+
+    replaceOrAppendOption(optionsText, key, line) {
+        const optionRegex = new RegExp(`^${key}:.*$`, 'm')
+
+        if(optionRegex.test(optionsText)) {
+            return optionsText.replace(optionRegex, line)
+        }
+
+        return `${optionsText.trimEnd()}\n${line}\n`
     }
 
     /**
@@ -230,7 +298,7 @@ class ProcessBuilder {
                     return true
                 }
             }
-        } catch (err) {
+        } catch (_err) {
             // We know old forge versions follow this format.
             // Error must be caused by newer version.
         }
@@ -300,6 +368,16 @@ class ProcessBuilder {
      * @param {Array.<Object>} mods An array of mods to add to the mod list.
      */
     constructModList(mods) {
+        if(this.modManifest && this.modManifest.id && this.modManifest.id.toLowerCase().includes('neoforge')) {
+            const modsDir = path.join(this.gameDir, 'mods')
+            fs.ensureDirSync(modsDir)
+            fs.emptyDirSync(modsDir)
+            for(const mod of mods) {
+                fs.copyFileSync(mod.getPath(), path.join(modsDir, path.basename(mod.getPath())))
+            }
+            return []
+        }
+
         const writeBuffer = mods.map(mod => {
             return this.usingFabricLoader ? mod.getPath() : mod.getExtensionlessMavenIdentifier()
         }).join('\n')
@@ -368,7 +446,7 @@ class ProcessBuilder {
 
         // Java Arguments
         if(process.platform === 'darwin'){
-            args.push('-Xdock:name=CARTA')
+            args.push('-Xdock:name=Pokevill')
             args.push('-Xdock:icon=' + path.join(__dirname, '..', 'images', 'minecraft.icns'))
         }
         args.push('-Xmx' + ConfigManager.getMaxRAM(this.server.rawServer.id))
@@ -407,10 +485,20 @@ class ProcessBuilder {
 
         if(this.modManifest.arguments.jvm != null) {
             for(const argStr of this.modManifest.arguments.jvm) {
-                args.push(argStr
+                let finalArgStr = argStr
+                if(finalArgStr.includes('-DignoreList=')) {
+                    if(this.modManifest.id && this.modManifest.id.startsWith('21.')) {
+                        finalArgStr = finalArgStr.replaceAll('${version_name}.jar', `neoforge-${this.modManifest.id}.jar,neoforge-${this.modManifest.id}-universal.jar,neoforge-${this.modManifest.id}-client.jar`)
+                    } else {
+                        finalArgStr = finalArgStr.replaceAll('${version_name}', this.modManifest.id)
+                    }
+                } else {
+                    finalArgStr = finalArgStr.replaceAll('${version_name}', this.modManifest.id)
+                }
+
+                args.push(finalArgStr
                     .replaceAll('${library_directory}', this.libPath)
                     .replaceAll('${classpath_separator}', ProcessBuilder.getClasspathSeparator())
-                    .replaceAll('${version_name}', this.modManifest.id)
                 )
             }
         }
@@ -419,7 +507,7 @@ class ProcessBuilder {
 
         // Java Arguments
         if(process.platform === 'darwin'){
-            args.push('-Xdock:name=CARTA')
+            args.push('-Xdock:name=Pokevill')
             args.push('-Xdock:icon=' + path.join(__dirname, '..', 'images', 'minecraft.icns'))
         }
         args.push('-Xmx' + ConfigManager.getMaxRAM(this.server.rawServer.id))
@@ -659,6 +747,11 @@ class ProcessBuilder {
 
     }
 
+    _usesNeoForgeProductionClientProvider() {
+        const gameArgs = this.modManifest?.arguments?.game ?? []
+        return gameArgs.includes('--fml.neoForgeVersion') && gameArgs.includes('--fml.neoFormVersion')
+    }
+
     /**
      * Resolve the full classpath argument list for this process. This method will resolve all Mojang-declared
      * libraries as well as the libraries declared by the server. Since mods are permitted to declare libraries,
@@ -671,9 +764,12 @@ class ProcessBuilder {
     classpathArg(mods, tempNativePath){
         let cpArgs = []
 
-        if(!mcVersionAtLeast('1.17', this.server.rawServer.minecraftVersion) || this.usingFabricLoader) {
-            // Add the version.jar to the classpath.
-            // Must not be added to the classpath for Forge 1.17+.
+        const shouldAddVanillaVersionJar = !this._usesNeoForgeProductionClientProvider()
+            && (!mcVersionAtLeast('1.17', this.server.rawServer.minecraftVersion) || this.usingFabricLoader)
+
+        // Forge/NeoForge 1.17+는 로더가 변환된 마인크래프트 jar를 따로 잡는다.
+        // 이때 바닐라 version.jar를 같이 넣으면 같은 패키지를 가진 모듈이 중복되어 즉시 종료된다.
+        if(shouldAddVanillaVersionJar) {
             const version = this.vanillaManifest.id
             cpArgs.push(path.join(this.commonDir, 'versions', version, version + '.jar'))
         }
@@ -691,9 +787,11 @@ class ProcessBuilder {
 
         // Merge libraries, server libs with the same
         // maven identifier will override the mojang ones.
-        // Ex. 1.7.10 forge overrides mojang's guava with newer version.
         const finalLibs = {...mojangLibs, ...servLibs}
-        cpArgs = cpArgs.concat(Object.values(finalLibs))
+        cpArgs = cpArgs.concat(Object.values(finalLibs)
+            .filter(p => p.endsWith('.jar') || p.endsWith('.zip'))
+            .filter(p => !p.includes('-srg.jar') && !p.includes('-extra.jar') && !p.includes('-universal.jar') && !p.includes('-client.jar'))
+        )
 
         this._processClassPathList(cpArgs)
 

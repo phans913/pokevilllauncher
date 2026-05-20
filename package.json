@@ -1,9 +1,9 @@
 {
-  "name": "CARTA",
-  "version": "1.0.1",
-  "productName": "CARTA",
-  "description": "Modded Minecraft Launcher",
-  "author": "gotiger (https://github.com/CustomLauncherLab/)",
+  "name": "Pokevill",
+  "version": "1.0.3",
+  "productName": "Pokevill Launcher",
+  "description": "Pokevill Launcher",
+  "author": "Pokevill",
   "license": "UNLICENSED",
   "homepage": "https://github.com/CustomLauncherLab/CARTA",
   "bugs": {
