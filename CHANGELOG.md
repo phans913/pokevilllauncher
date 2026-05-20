@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.7 - 2026-05-20
+- Added `build.zip` to the default selected resource packs as the lowest custom pack under `BetterHangulFont.zip`.
+- Published a fresh GitHub Release asset set under `v1.0.7`.
+
 ## 1.0.6 - 2026-05-20
 - Corrected the default resource pack priority so the in-game selected pack order is `MenuResourcePack-v1.0.4.zip`, `apinametag-name-display-arclight-1.21.1.zip`, `pokevill.zip`, then `BetterHangulFont.zip`.
 - Published a fresh GitHub Release asset set under `v1.0.6`.
