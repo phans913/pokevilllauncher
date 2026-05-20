@@ -1,5 +1,5 @@
 {
-  "version": "1.0.3",
+  "version": "1.0.4",
   "servers": [
     {
       "id": "pokevill",
@@ -31,9 +31,9 @@
           "artifact": {
             "size": 686,
             "MD5": null,
-            "hash": "6f8be5fb70a93b47ca3203b0f7d3a67b74889011",
+            "hash": "632a54740768d66dd3180cb0a285765dd6baf031",
             "path": "net/neoforged/neoforge/21.1.220/neoforge-21.1.220.jar",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/dummy.jar"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.4/dummy.jar"
           },
           "subModules": [
             {
@@ -44,7 +44,7 @@
                 "MD5": null,
                 "hash": "b08cc61dd0daf2bc70af5f937d9023a9423b0950",
                 "path": "net/neoforged/neoforge/21.1.220/version.json",
-                "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/version.json"
+                "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.4/version.json"
               }
             },
             {
@@ -235,17 +235,6 @@
               }
             },
             {
-              "id": "org.apache.commons:commons-lang3:3.14.0",
-              "type": "Library",
-              "artifact": {
-                "size": 657952,
-                "MD5": null,
-                "hash": "1ed471194b02f2c6cb734a0cd6f6f107c673afae",
-                "path": "org/apache/commons/commons-lang3/3.14.0/commons-lang3-3.14.0.jar",
-                "url": "https://libraries.minecraft.net/org/apache/commons/commons-lang3/3.14.0/commons-lang3-3.14.0.jar"
-              }
-            },
-            {
               "id": "cpw.mods:bootstraplauncher:2.0.2",
               "type": "Library",
               "artifact": {
@@ -334,28 +323,6 @@
               }
             },
             {
-              "id": "net.sf.jopt-simple:jopt-simple:5.0.4",
-              "type": "Library",
-              "artifact": {
-                "size": 78146,
-                "MD5": null,
-                "hash": "4fdac2fbe92dfad86aa6e9301736f6b4342a3f5c",
-                "path": "net/sf/jopt-simple/jopt-simple/5.0.4/jopt-simple-5.0.4.jar",
-                "url": "https://libraries.minecraft.net/net/sf/jopt-simple/jopt-simple/5.0.4/jopt-simple-5.0.4.jar"
-              }
-            },
-            {
-              "id": "org.slf4j:slf4j-api:2.0.9",
-              "type": "Library",
-              "artifact": {
-                "size": 64579,
-                "MD5": null,
-                "hash": "7cf2726fdcfbc8610f9a71fb3ed639871f315340",
-                "path": "org/slf4j/slf4j-api/2.0.9/slf4j-api-2.0.9.jar",
-                "url": "https://libraries.minecraft.net/org/slf4j/slf4j-api/2.0.9/slf4j-api-2.0.9.jar"
-              }
-            },
-            {
               "id": "org.antlr:antlr4-runtime:4.13.1",
               "type": "Library",
               "artifact": {
@@ -364,50 +331,6 @@
                 "hash": "17125bae1d965624e265ef49552f6465a2bfa307",
                 "path": "org/antlr/antlr4-runtime/4.13.1/antlr4-runtime-4.13.1.jar",
                 "url": "https://neoforged.forgecdn.net/releases/org/antlr/antlr4-runtime/4.13.1/antlr4-runtime-4.13.1.jar"
-              }
-            },
-            {
-              "id": "com.mojang:logging:1.2.7",
-              "type": "Library",
-              "artifact": {
-                "size": 15343,
-                "MD5": null,
-                "hash": "24cb95ffb0e3433fd6e844c04e68009e504ca1c0",
-                "path": "com/mojang/logging/1.2.7/logging-1.2.7.jar",
-                "url": "https://libraries.minecraft.net/com/mojang/logging/1.2.7/logging-1.2.7.jar"
-              }
-            },
-            {
-              "id": "org.apache.logging.log4j:log4j-slf4j2-impl:2.22.1",
-              "type": "Library",
-              "artifact": {
-                "size": 27364,
-                "MD5": null,
-                "hash": "d7e6693c2606cb7e7335047d7bb96dec52db5665",
-                "path": "org/apache/logging/log4j/log4j-slf4j2-impl/2.22.1/log4j-slf4j2-impl-2.22.1.jar",
-                "url": "https://libraries.minecraft.net/org/apache/logging/log4j/log4j-slf4j2-impl/2.22.1/log4j-slf4j2-impl-2.22.1.jar"
-              }
-            },
-            {
-              "id": "org.apache.logging.log4j:log4j-core:2.22.1",
-              "type": "Library",
-              "artifact": {
-                "size": 1900022,
-                "MD5": null,
-                "hash": "7183a25510a02ad00cc6a95d3b3d2a7d3c5a8dc4",
-                "path": "org/apache/logging/log4j/log4j-core/2.22.1/log4j-core-2.22.1.jar",
-                "url": "https://libraries.minecraft.net/org/apache/logging/log4j/log4j-core/2.22.1/log4j-core-2.22.1.jar"
-              }
-            },
-            {
-              "id": "org.apache.logging.log4j:log4j-api:2.22.1",
-              "type": "Library",
-              "artifact": {
-                "size": 335001,
-                "MD5": null,
-                "hash": "bea6fede6328fabafd7e68363161a7ea6605abd1",
-                "path": "org/apache/logging/log4j/log4j-api/2.22.1/log4j-api-2.22.1.jar",
-                "url": "https://libraries.minecraft.net/org/apache/logging/log4j/log4j-api/2.22.1/log4j-api-2.22.1.jar"
               }
             },
             {
@@ -433,17 +356,6 @@
               }
             },
             {
-              "id": "commons-io:commons-io:2.15.1",
-              "type": "Library",
-              "artifact": {
-                "size": 501218,
-                "MD5": null,
-                "hash": "f11560da189ab563a5c8e351941415430e9304ea",
-                "path": "commons-io/commons-io/2.15.1/commons-io-2.15.1.jar",
-                "url": "https://libraries.minecraft.net/commons-io/commons-io/2.15.1/commons-io-2.15.1.jar"
-              }
-            },
-            {
               "id": "net.minecraftforge:srgutils:0.4.15",
               "type": "Library",
               "artifact": {
@@ -452,28 +364,6 @@
                 "hash": "ca408b131759478f164e010fae0d73997e125fb5",
                 "path": "net/minecraftforge/srgutils/0.4.15/srgutils-0.4.15.jar",
                 "url": "https://neoforged.forgecdn.net/releases/net/minecraftforge/srgutils/0.4.15/srgutils-0.4.15.jar"
-              }
-            },
-            {
-              "id": "com.google.guava:guava:32.1.2-jre",
-              "type": "Library",
-              "artifact": {
-                "size": 3041591,
-                "MD5": null,
-                "hash": "5e64ec7e056456bef3a4bc4c6fdaef71e8ab6318",
-                "path": "com/google/guava/guava/32.1.2-jre/guava-32.1.2-jre.jar",
-                "url": "https://libraries.minecraft.net/com/google/guava/guava/32.1.2-jre/guava-32.1.2-jre.jar"
-              }
-            },
-            {
-              "id": "com.google.guava:failureaccess:1.0.1",
-              "type": "Library",
-              "artifact": {
-                "size": 4617,
-                "MD5": null,
-                "hash": "1dcf1de382a0bf95a3d8b0849546c88bac1292c9",
-                "path": "com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar",
-                "url": "https://libraries.minecraft.net/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar"
               }
             },
             {
@@ -532,17 +422,6 @@
               }
             },
             {
-              "id": "com.google.code.gson:gson:2.10.1",
-              "type": "Library",
-              "artifact": {
-                "size": 283367,
-                "MD5": null,
-                "hash": "b3add478d4382b78ea20b1671390a858002feb6c",
-                "path": "com/google/code/gson/gson/2.10.1/gson-2.10.1.jar",
-                "url": "https://libraries.minecraft.net/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar"
-              }
-            },
-            {
               "id": "org.codehaus.plexus:plexus-utils:3.3.0",
               "type": "Library",
               "artifact": {
@@ -572,7 +451,7 @@
                 "MD5": null,
                 "hash": "a4827225b3c07662ca68b03ea20d11433a0c0488",
                 "path": "net/minecraft/client/1.21.1-20240808.144430/client-1.21.1-20240808.144430-srg.jar",
-                "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/client-1.21.1-20240808.144430-srg.jar"
+                "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.4/client-1.21.1-20240808.144430-srg.jar"
               }
             },
             {
@@ -583,7 +462,7 @@
                 "MD5": null,
                 "hash": "db5c59932751d66c2f57c1c2de41b48712620975",
                 "path": "net/minecraft/client/1.21.1-20240808.144430/client-1.21.1-20240808.144430-extra.jar",
-                "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/client-1.21.1-20240808.144430-extra.jar"
+                "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.4/client-1.21.1-20240808.144430-extra.jar"
               }
             },
             {
@@ -594,7 +473,7 @@
                 "MD5": null,
                 "hash": "c6ed41a2a01ea5bcd44a131f38f2058d37e8996a",
                 "path": "net/neoforged/neoforge/21.1.220/neoforge-21.1.220-client.jar",
-                "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/neoforge-21.1.220-client.jar"
+                "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.4/neoforge-21.1.220-client.jar"
               }
             },
             {
@@ -605,7 +484,7 @@
                 "MD5": null,
                 "hash": "397e3684b8fb8ef659a6ef6c5a67bf54c775f140",
                 "path": "net/neoforged/neoforge/21.1.220/neoforge-21.1.220-universal.jar",
-                "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/neoforge-21.1.220-universal.jar"
+                "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.4/neoforge-21.1.220-universal.jar"
               }
             },
             {
@@ -616,7 +495,7 @@
                 "MD5": null,
                 "hash": "c75b8be2c5cd8da96806be46d59e046b24628731",
                 "path": "net/neoforged/neoforge/21.1.220/neoforge-21.1.220-clientdata.lzma",
-                "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/neoforge-21.1.220-clientdata.lzma"
+                "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.4/neoforge-21.1.220-clientdata.lzma"
               }
             }
           ],
@@ -663,7 +542,7 @@
             "MD5": null,
             "hash": "a3e6355915c7d3b2bc392724795113e51d289378",
             "path": "mods/iris-neoforge-1.8.12+mc1.21.1.jar",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/iris-neoforge-1.8.12%2Bmc1.21.1.jar"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.4/iris-neoforge-1.8.12%2Bmc1.21.1.jar"
           }
         },
         {
@@ -675,7 +554,7 @@
             "MD5": null,
             "hash": "15f0bffa9f3c8c0868d29f9d33c75e586d55425d",
             "path": "mods/pamhc2crops-NEOFORGE-1.21.1-1.0.0.jar",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/pamhc2crops-NEOFORGE-1.21.1-1.0.0.jar"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.4/pamhc2crops-NEOFORGE-1.21.1-1.0.0.jar"
           }
         },
         {
@@ -687,7 +566,7 @@
             "MD5": null,
             "hash": "1696ee5147113b1f0f7af73d7ba991d8db7ac6c0",
             "path": "mods/Pixelmon-1.21.1-9.3.14-universal.jar",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/Pixelmon-1.21.1-9.3.14-universal.jar"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.4/Pixelmon-1.21.1-9.3.14-universal.jar"
           }
         },
         {
@@ -699,7 +578,7 @@
             "MD5": null,
             "hash": "66f20e251ee95897f87462a417313b6323a48f56",
             "path": "mods/pokemonquest-1.0.20.jar",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/pokemonquest-1.0.20.jar"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.4/pokemonquest-1.0.20.jar"
           }
         },
         {
@@ -711,7 +590,7 @@
             "MD5": null,
             "hash": "13a78007316e343a25c89b47791e9230e9d6bb3f",
             "path": "mods/pokevill-1.0.0.jar",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/pokevill-1.0.0.jar"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.4/pokevill-1.0.0.jar"
           }
         },
         {
@@ -723,7 +602,7 @@
             "MD5": null,
             "hash": "ec67cef909898a9bb1516c5e5ef32a619153974b",
             "path": "mods/pokevillgacha-1.0.0.jar",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/pokevillgacha-1.0.0.jar"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.4/pokevillgacha-1.0.0.jar"
           }
         },
         {
@@ -735,7 +614,7 @@
             "MD5": null,
             "hash": "38af70fa4dc4b2aaac636e92fdba3bedd5a025e1",
             "path": "mods/sodium-neoforge-0.6.13+mc1.21.1.jar",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/sodium-neoforge-0.6.13%2Bmc1.21.1.jar"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.4/sodium-neoforge-0.6.13%2Bmc1.21.1.jar"
           }
         },
         {
@@ -747,7 +626,7 @@
             "MD5": null,
             "hash": "f7913209ba22814ddf709bb9e4e76fa9fd0775e9",
             "path": "mods/voicechat-neoforge-1.21.1-2.6.12.jar",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/voicechat-neoforge-1.21.1-2.6.12.jar"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.4/voicechat-neoforge-1.21.1-2.6.12.jar"
           }
         },
         {
@@ -759,7 +638,7 @@
             "MD5": null,
             "hash": "924fe181a29bd66be6783f6d589968ab0ee02250",
             "path": "mods/worldedit-mod-7.3.8.jar",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/worldedit-mod-7.3.8.jar"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.4/worldedit-mod-7.3.8.jar"
           }
         },
         {
@@ -771,7 +650,7 @@
             "MD5": null,
             "hash": "6bb7072d42249f5b406e4d1daaa2c8b6f29319f4",
             "path": "resourcepacks/apinametag-name-display-arclight-1.21.1.zip",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/apinametag-name-display-arclight-1.21.1.zip"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.4/apinametag-name-display-arclight-1.21.1.zip"
           }
         },
         {
@@ -783,7 +662,7 @@
             "MD5": null,
             "hash": "ec8bfc058f5e3b68ab93487b7d759b72ca5b58d5",
             "path": "resourcepacks/BetterHangulFont.zip",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/BetterHangulFont.zip"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.4/BetterHangulFont.zip"
           }
         },
         {
@@ -795,7 +674,7 @@
             "MD5": null,
             "hash": "2bd3306481dd1a5432cd9818137f0597f2573b99",
             "path": "resourcepacks/BM.Jua.zip",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/BM.Jua.zip"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.4/BM.Jua.zip"
           }
         },
         {
@@ -807,7 +686,7 @@
             "MD5": null,
             "hash": "701a0c68a383d6b208a1fa91fd69fac8cd50063d",
             "path": "resourcepacks/build.zip",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/build.zip"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.4/build.zip"
           }
         },
         {
@@ -819,7 +698,7 @@
             "MD5": null,
             "hash": "57e21a154aca4c83f0700feb251d9c44431a9cbb",
             "path": "resourcepacks/MenuResourcePack-v1.0.4.zip",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/MenuResourcePack-v1.0.4.zip"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.4/MenuResourcePack-v1.0.4.zip"
           }
         },
         {
@@ -831,7 +710,7 @@
             "MD5": null,
             "hash": "8382a15dcda998cde813792599f26dbbb504f5f2",
             "path": "resourcepacks/pokevill.zip",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.3/pokevill.zip"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.4/pokevill.zip"
           }
         }
       ]

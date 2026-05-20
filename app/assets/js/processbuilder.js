@@ -368,7 +368,7 @@ class ProcessBuilder {
      * @param {Array.<Object>} mods An array of mods to add to the mod list.
      */
     constructModList(mods) {
-        if(this.modManifest && this.modManifest.id && this.modManifest.id.toLowerCase().includes('neoforge')) {
+        if(this.isNeoForgeModernManifest()) {
             const modsDir = path.join(this.gameDir, 'mods')
             fs.ensureDirSync(modsDir)
             fs.emptyDirSync(modsDir)
@@ -397,6 +397,15 @@ class ProcessBuilder {
             return []
         }
 
+    }
+
+    isNeoForgeModernManifest() {
+        if(!this.modManifest || !this.modManifest.id) {
+            return false
+        }
+
+        const modManifestId = this.modManifest.id.toLowerCase()
+        return modManifestId.includes('neoforge') || modManifestId.startsWith('21.')
     }
 
     _processAutoConnectArg(args){
