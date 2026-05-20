@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.5 - 2026-05-20
+- Updated the default resource pack selection to load `MenuResourcePack-v1.0.4.zip`, `apinametag-name-display-arclight-1.21.1.zip`, `pokevill.zip`, and `BetterHangulFont.zip` in that order.
+- Published a fresh GitHub Release asset set under `v1.0.5`.
+
 ## 1.0.4 - 2026-05-20
 - Fixed NeoForge 1.21.1 launch handling so downloaded mods are copied into the instance `mods` folder instead of launching through an incompatible Forge mod list.
 - Published a fresh GitHub Release asset set under `v1.0.4`.

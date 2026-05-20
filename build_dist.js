@@ -6,7 +6,7 @@ const AdmZip = require('adm-zip')
 
 const CURSEFORGE_NEOFORGE_JSON = 'C:\\Users\\JISUNG\\curseforge\\minecraft\\Install\\versions\\neoforge-21.1.220\\neoforge-21.1.220.json'
 const OUTPUT_JSON = path.join(__dirname, 'distribution.json')
-const APP_VERSION = '1.0.4'
+const APP_VERSION = '1.0.5'
 const SERVER_NAME = 'Pokevill'
 const SERVER_ADDRESS = 'pokevill.r-e.kr'
 const GITHUB_RELEASE_REPOSITORY = 'phans913/pokevilllauncher'
