@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.12 - 2026-05-23
+- Restored the launcher autoconnect address, default server list address, and default last server value to `pokevill.r-e.kr`.
+- Published a fresh GitHub Release asset set under `v1.0.12`.
+
 ## 1.0.11 - 2026-05-23
 - Added `ComplementaryUnbound_r5.5.1.zip` to the managed shaderpacks.
 - Added the default Iris config so fresh Pokevill instances start with shaders enabled and `ComplementaryUnbound_r5.5.1.zip` selected.
