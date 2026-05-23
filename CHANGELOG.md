@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.13 - 2026-05-23
+- Added a one-way migration that updates existing `options.txt` and `servers.dat` entries from `pokevill.mcv.kr` to `pokevill.r-e.kr`.
+- Kept the launcher autoconnect address, default server list address, and default last server value on `pokevill.r-e.kr`.
+- Published a fresh GitHub Release asset set under `v1.0.13`.
+
 ## 1.0.12 - 2026-05-23
 - Restored the launcher autoconnect address, default server list address, and default last server value to `pokevill.r-e.kr`.
 - Published a fresh GitHub Release asset set under `v1.0.12`.

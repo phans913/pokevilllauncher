@@ -12,6 +12,9 @@ const ConfigManager            = require('./configmanager')
 
 const logger = LoggerUtil.getLogger('ProcessBuilder')
 
+const CURRENT_POKEVILL_SERVER_ADDRESS = 'pokevill.r-e.kr'
+const LEGACY_POKEVILL_SERVER_ADDRESSES = ['pokevill.mcv.kr']
+
 
 /**
  * Only forge and fabric are top level mod loaders.
@@ -48,6 +51,7 @@ class ProcessBuilder {
         fs.ensureDirSync(this.gameDir)
         this.ensureInitialMinecraftDefaults()
         this.ensureDefaultShaderConfig()
+        this.ensureCurrentServerAddress()
         const tempNativePath = path.join(os.tmpdir(), ConfigManager.getTempNativeFolder(), crypto.pseudoRandomBytes(16).toString('hex'))
         process.throwDeprecation = true
         this.setupLiteLoader()
@@ -150,6 +154,73 @@ class ProcessBuilder {
         // 이 구현의 의도는 기존 유저가 Iris 설정을 직접 만든 경우 보존하고, 설정 파일이 없는 인스턴스에만 기본 쉐이더를 켜는 것이다.
         if(!fs.existsSync(gamePath)) {
             this.copyBundledDefaultPath(relativePath)
+        }
+    }
+
+    ensureCurrentServerAddress() {
+        const optionsPath = path.join(this.gameDir, 'options.txt')
+        const serversPath = path.join(this.gameDir, 'servers.dat')
+
+        // 이 구현의 의도는 기존 유저의 조작키/그래픽 설정은 보존하면서 포켓빌 접속 주소만 새 운영 주소로 되돌리는 것이다.
+        this.replaceLegacyServerAddressInTextFile(optionsPath)
+
+        if(!fs.existsSync(serversPath)) {
+            this.copyBundledDefaultFile('servers.dat')
+        } else {
+            this.replaceLegacyServerAddressInBinaryFile(serversPath)
+        }
+    }
+
+    replaceLegacyServerAddressInTextFile(filePath) {
+        if(!fs.existsSync(filePath)) {
+            return
+        }
+
+        let fileText = fs.readFileSync(filePath, 'UTF-8')
+        let changed = false
+
+        for(const legacyAddress of LEGACY_POKEVILL_SERVER_ADDRESSES) {
+            if(fileText.includes(legacyAddress)) {
+                fileText = fileText.split(legacyAddress).join(CURRENT_POKEVILL_SERVER_ADDRESS)
+                changed = true
+            }
+        }
+
+        if(changed) {
+            fs.writeFileSync(filePath, fileText, 'UTF-8')
+            logger.info('Pokevill server address migrated in text file:', filePath)
+        }
+    }
+
+    replaceLegacyServerAddressInBinaryFile(filePath) {
+        if(!fs.existsSync(filePath)) {
+            return
+        }
+
+        const currentAddressBuffer = Buffer.from(CURRENT_POKEVILL_SERVER_ADDRESS, 'utf8')
+        const fileBuffer = fs.readFileSync(filePath)
+        let changed = false
+
+        for(const legacyAddress of LEGACY_POKEVILL_SERVER_ADDRESSES) {
+            const legacyAddressBuffer = Buffer.from(legacyAddress, 'utf8')
+
+            if(legacyAddressBuffer.length !== currentAddressBuffer.length) {
+                logger.warn('Skipping binary server address migration because address lengths differ:', legacyAddress)
+                continue
+            }
+
+            let offset = fileBuffer.indexOf(legacyAddressBuffer)
+
+            while(offset !== -1) {
+                currentAddressBuffer.copy(fileBuffer, offset)
+                changed = true
+                offset = fileBuffer.indexOf(legacyAddressBuffer, offset + currentAddressBuffer.length)
+            }
+        }
+
+        if(changed) {
+            fs.writeFileSync(filePath, fileBuffer)
+            logger.info('Pokevill server address migrated in binary file:', filePath)
         }
     }
 
