@@ -6,7 +6,7 @@ const AdmZip = require('adm-zip')
 
 const CURSEFORGE_NEOFORGE_JSON = 'C:\\Users\\JISUNG\\curseforge\\minecraft\\Install\\versions\\neoforge-21.1.220\\neoforge-21.1.220.json'
 const OUTPUT_JSON = path.join(__dirname, 'distribution.json')
-const APP_VERSION = '1.0.7'
+const APP_VERSION = '1.0.8'
 const SERVER_NAME = 'Pokevill'
 const SERVER_ADDRESS = 'pokevill.r-e.kr'
 const GITHUB_RELEASE_REPOSITORY = 'phans913/pokevilllauncher'
@@ -15,7 +15,7 @@ const GITHUB_RELEASE_BASE = `https://github.com/${GITHUB_RELEASE_REPOSITORY}/rel
 const GOOGLE_DRIVE_MANIFEST = path.join(__dirname, 'google_drive_files.json')
 const USE_GOOGLE_DRIVE = fs.existsSync(GOOGLE_DRIVE_MANIFEST)
 const googleDriveFiles = USE_GOOGLE_DRIVE ? JSON.parse(fs.readFileSync(GOOGLE_DRIVE_MANIFEST, 'utf8')) : {}
-const SOURCE_MODPACK_DIR = path.join(__dirname, '..', '포켓빌 프록시 런처 모드팩')
+const SOURCE_MODPACK_DIR = path.join(__dirname, '..', '포켓빌 프록시 docker', '포켓빌 최종 모드팩')
 const BUNDLE_ROOT = path.join(__dirname, 'Pokevill_GoogleDrive_Bundle')
 const DEFAULTS_DIR = path.join(__dirname, 'app', 'assets', 'defaults')
 

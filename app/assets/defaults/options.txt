@@ -48,7 +48,7 @@ mouseSensitivity:0.5
 damageTiltStrength:1.0
 highContrast:false
 narratorHotkey:true
-resourcePacks:["vanilla","mod_resources","file/build.zip","file/BetterHangulFont.zip","file/pokevill.zip","file/apinametag-name-display-arclight-1.21.1.zip","file/MenuResourcePack-v1.0.4.zip"]
+resourcePacks:["vanilla","mod_resources","file/build.zip","file/pokevill.zip"]
 incompatibleResourcePacks:[]
 lastServer:pokevill.r-e.kr
 lang:ko_kr

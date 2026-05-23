@@ -1,5 +1,5 @@
 {
-  "version": "1.0.7",
+  "version": "1.0.8",
   "servers": [
     {
       "id": "pokevill",
@@ -31,9 +31,9 @@
           "artifact": {
             "size": 686,
             "MD5": null,
-            "hash": "58650263821302b66e6280bec1086451fe997d98",
+            "hash": "f51e6d33fad7a15352868f36743e44a8688c3006",
             "path": "net/neoforged/neoforge/21.1.220/neoforge-21.1.220.jar",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.7/dummy.jar"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.8/dummy.jar"
           },
           "subModules": [
             {
@@ -44,7 +44,7 @@
                 "MD5": null,
                 "hash": "b08cc61dd0daf2bc70af5f937d9023a9423b0950",
                 "path": "net/neoforged/neoforge/21.1.220/version.json",
-                "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.7/version.json"
+                "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.8/version.json"
               }
             },
             {
@@ -451,7 +451,7 @@
                 "MD5": null,
                 "hash": "a4827225b3c07662ca68b03ea20d11433a0c0488",
                 "path": "net/minecraft/client/1.21.1-20240808.144430/client-1.21.1-20240808.144430-srg.jar",
-                "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.7/client-1.21.1-20240808.144430-srg.jar"
+                "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.8/client-1.21.1-20240808.144430-srg.jar"
               }
             },
             {
@@ -462,7 +462,7 @@
                 "MD5": null,
                 "hash": "db5c59932751d66c2f57c1c2de41b48712620975",
                 "path": "net/minecraft/client/1.21.1-20240808.144430/client-1.21.1-20240808.144430-extra.jar",
-                "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.7/client-1.21.1-20240808.144430-extra.jar"
+                "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.8/client-1.21.1-20240808.144430-extra.jar"
               }
             },
             {
@@ -473,7 +473,7 @@
                 "MD5": null,
                 "hash": "c6ed41a2a01ea5bcd44a131f38f2058d37e8996a",
                 "path": "net/neoforged/neoforge/21.1.220/neoforge-21.1.220-client.jar",
-                "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.7/neoforge-21.1.220-client.jar"
+                "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.8/neoforge-21.1.220-client.jar"
               }
             },
             {
@@ -484,7 +484,7 @@
                 "MD5": null,
                 "hash": "397e3684b8fb8ef659a6ef6c5a67bf54c775f140",
                 "path": "net/neoforged/neoforge/21.1.220/neoforge-21.1.220-universal.jar",
-                "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.7/neoforge-21.1.220-universal.jar"
+                "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.8/neoforge-21.1.220-universal.jar"
               }
             },
             {
@@ -495,7 +495,7 @@
                 "MD5": null,
                 "hash": "c75b8be2c5cd8da96806be46d59e046b24628731",
                 "path": "net/neoforged/neoforge/21.1.220/neoforge-21.1.220-clientdata.lzma",
-                "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.7/neoforge-21.1.220-clientdata.lzma"
+                "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.8/neoforge-21.1.220-clientdata.lzma"
               }
             }
           ],
@@ -542,7 +542,7 @@
             "MD5": null,
             "hash": "a3e6355915c7d3b2bc392724795113e51d289378",
             "path": "mods/iris-neoforge-1.8.12+mc1.21.1.jar",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.7/iris-neoforge-1.8.12%2Bmc1.21.1.jar"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.8/iris-neoforge-1.8.12%2Bmc1.21.1.jar"
           }
         },
         {
@@ -554,7 +554,7 @@
             "MD5": null,
             "hash": "15f0bffa9f3c8c0868d29f9d33c75e586d55425d",
             "path": "mods/pamhc2crops-NEOFORGE-1.21.1-1.0.0.jar",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.7/pamhc2crops-NEOFORGE-1.21.1-1.0.0.jar"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.8/pamhc2crops-NEOFORGE-1.21.1-1.0.0.jar"
           }
         },
         {
@@ -566,19 +566,19 @@
             "MD5": null,
             "hash": "1696ee5147113b1f0f7af73d7ba991d8db7ac6c0",
             "path": "mods/Pixelmon-1.21.1-9.3.14-universal.jar",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.7/Pixelmon-1.21.1-9.3.14-universal.jar"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.8/Pixelmon-1.21.1-9.3.14-universal.jar"
           }
         },
         {
-          "id": "pokevill.mods:pokemonquest-1.0.20:4",
-          "name": "pokemonquest-1.0.20.jar",
+          "id": "pokevill.mods:pokemonquest-1.0.23:4",
+          "name": "pokemonquest-1.0.23.jar",
           "type": "ForgeMod",
           "artifact": {
-            "size": 2087921,
+            "size": 2091749,
             "MD5": null,
-            "hash": "66f20e251ee95897f87462a417313b6323a48f56",
-            "path": "mods/pokemonquest-1.0.20.jar",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.7/pokemonquest-1.0.20.jar"
+            "hash": "f563ab6c2d74d578b078723bf6a9fc68f3f31343",
+            "path": "mods/pokemonquest-1.0.23.jar",
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.8/pokemonquest-1.0.23.jar"
           }
         },
         {
@@ -590,19 +590,19 @@
             "MD5": null,
             "hash": "13a78007316e343a25c89b47791e9230e9d6bb3f",
             "path": "mods/pokevill-1.0.0.jar",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.7/pokevill-1.0.0.jar"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.8/pokevill-1.0.0.jar"
           }
         },
         {
-          "id": "pokevill.mods:pokevillgacha-1.0.0:6",
-          "name": "pokevillgacha-1.0.0.jar",
+          "id": "pokevill.mods:pokevillgacha-1.0.0-2:6",
+          "name": "pokevillgacha-1.0.0 (2).jar",
           "type": "ForgeMod",
           "artifact": {
-            "size": 26198,
+            "size": 348682,
             "MD5": null,
-            "hash": "ec67cef909898a9bb1516c5e5ef32a619153974b",
-            "path": "mods/pokevillgacha-1.0.0.jar",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.7/pokevillgacha-1.0.0.jar"
+            "hash": "b3ff42e6d2b736eefa9e290a1c5cf52dd09ee3c4",
+            "path": "mods/pokevillgacha-1.0.0 (2).jar",
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.8/pokevillgacha-1.0.0%20(2).jar"
           }
         },
         {
@@ -614,7 +614,7 @@
             "MD5": null,
             "hash": "38af70fa4dc4b2aaac636e92fdba3bedd5a025e1",
             "path": "mods/sodium-neoforge-0.6.13+mc1.21.1.jar",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.7/sodium-neoforge-0.6.13%2Bmc1.21.1.jar"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.8/sodium-neoforge-0.6.13%2Bmc1.21.1.jar"
           }
         },
         {
@@ -626,7 +626,7 @@
             "MD5": null,
             "hash": "f7913209ba22814ddf709bb9e4e76fa9fd0775e9",
             "path": "mods/voicechat-neoforge-1.21.1-2.6.12.jar",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.7/voicechat-neoforge-1.21.1-2.6.12.jar"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.8/voicechat-neoforge-1.21.1-2.6.12.jar"
           }
         },
         {
@@ -638,43 +638,7 @@
             "MD5": null,
             "hash": "924fe181a29bd66be6783f6d589968ab0ee02250",
             "path": "mods/worldedit-mod-7.3.8.jar",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.7/worldedit-mod-7.3.8.jar"
-          }
-        },
-        {
-          "id": "resourcepacksapinametag-name-display-arclight-1.21.1.zip",
-          "name": "apinametag-name-display-arclight-1.21.1.zip",
-          "type": "File",
-          "artifact": {
-            "size": 463264,
-            "MD5": null,
-            "hash": "6bb7072d42249f5b406e4d1daaa2c8b6f29319f4",
-            "path": "resourcepacks/apinametag-name-display-arclight-1.21.1.zip",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.7/apinametag-name-display-arclight-1.21.1.zip"
-          }
-        },
-        {
-          "id": "resourcepacksBetterHangulFont.zip",
-          "name": "BetterHangulFont.zip",
-          "type": "File",
-          "artifact": {
-            "size": 80065,
-            "MD5": null,
-            "hash": "ec8bfc058f5e3b68ab93487b7d759b72ca5b58d5",
-            "path": "resourcepacks/BetterHangulFont.zip",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.7/BetterHangulFont.zip"
-          }
-        },
-        {
-          "id": "resourcepacksBM.Jua.zip",
-          "name": "BM.Jua.zip",
-          "type": "File",
-          "artifact": {
-            "size": 424483,
-            "MD5": null,
-            "hash": "2bd3306481dd1a5432cd9818137f0597f2573b99",
-            "path": "resourcepacks/BM.Jua.zip",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.7/BM.Jua.zip"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.8/worldedit-mod-7.3.8.jar"
           }
         },
         {
@@ -686,19 +650,7 @@
             "MD5": null,
             "hash": "701a0c68a383d6b208a1fa91fd69fac8cd50063d",
             "path": "resourcepacks/build.zip",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.7/build.zip"
-          }
-        },
-        {
-          "id": "resourcepacksMenuResourcePack-v1.0.4.zip",
-          "name": "MenuResourcePack-v1.0.4.zip",
-          "type": "File",
-          "artifact": {
-            "size": 186128,
-            "MD5": null,
-            "hash": "57e21a154aca4c83f0700feb251d9c44431a9cbb",
-            "path": "resourcepacks/MenuResourcePack-v1.0.4.zip",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.7/MenuResourcePack-v1.0.4.zip"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.8/build.zip"
           }
         },
         {
@@ -706,11 +658,11 @@
           "name": "pokevill.zip",
           "type": "File",
           "artifact": {
-            "size": 27338897,
+            "size": 30477681,
             "MD5": null,
-            "hash": "8382a15dcda998cde813792599f26dbbb504f5f2",
+            "hash": "7dd97d22d113633751a4732e7b1a273193b7609c",
             "path": "resourcepacks/pokevill.zip",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.7/pokevill.zip"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.8/pokevill.zip"
           }
         }
       ]
