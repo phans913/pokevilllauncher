@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.14 - 2026-05-24
+- Changed the launcher autoconnect address, default server list address, and default last server value to `reade.p-e.kr`.
+- Reworked the existing-user server list migration so `servers.dat` can be updated even when the replacement address length changes.
+- Published a fresh GitHub Release asset set under `v1.0.14`.
+
 ## 1.0.13 - 2026-05-23
 - Added a one-way migration that updates existing `options.txt` and `servers.dat` entries from `pokevill.mcv.kr` to `pokevill.r-e.kr`.
 - Kept the launcher autoconnect address, default server list address, and default last server value on `pokevill.r-e.kr`.

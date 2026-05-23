@@ -12,8 +12,8 @@ const ConfigManager            = require('./configmanager')
 
 const logger = LoggerUtil.getLogger('ProcessBuilder')
 
-const CURRENT_POKEVILL_SERVER_ADDRESS = 'pokevill.r-e.kr'
-const LEGACY_POKEVILL_SERVER_ADDRESSES = ['pokevill.mcv.kr']
+const CURRENT_POKEVILL_SERVER_ADDRESS = 'reade.p-e.kr'
+const LEGACY_POKEVILL_SERVER_ADDRESSES = ['pokevill.r-e.kr', 'pokevill.mcv.kr']
 
 
 /**
@@ -197,30 +197,173 @@ class ProcessBuilder {
             return
         }
 
-        const currentAddressBuffer = Buffer.from(CURRENT_POKEVILL_SERVER_ADDRESS, 'utf8')
-        const fileBuffer = fs.readFileSync(filePath)
-        let changed = false
+        let migration
 
-        for(const legacyAddress of LEGACY_POKEVILL_SERVER_ADDRESSES) {
-            const legacyAddressBuffer = Buffer.from(legacyAddress, 'utf8')
-
-            if(legacyAddressBuffer.length !== currentAddressBuffer.length) {
-                logger.warn('Skipping binary server address migration because address lengths differ:', legacyAddress)
-                continue
-            }
-
-            let offset = fileBuffer.indexOf(legacyAddressBuffer)
-
-            while(offset !== -1) {
-                currentAddressBuffer.copy(fileBuffer, offset)
-                changed = true
-                offset = fileBuffer.indexOf(legacyAddressBuffer, offset + currentAddressBuffer.length)
-            }
+        try {
+            migration = this.rewriteLegacyServerAddressInNbtBuffer(fs.readFileSync(filePath))
+        } catch(err) {
+            logger.warn('Skipping Pokevill server address migration because servers.dat could not be parsed:', err)
+            return
         }
 
-        if(changed) {
-            fs.writeFileSync(filePath, fileBuffer)
+        if(migration.changed) {
+            fs.writeFileSync(filePath, migration.buffer)
             logger.info('Pokevill server address migrated in binary file:', filePath)
+        }
+    }
+
+    rewriteLegacyServerAddressInNbtBuffer(fileBuffer) {
+        const state = {
+            offset: 0,
+            chunks: [],
+            changed: false
+        }
+
+        const tagType = this.readNbtTagType(fileBuffer, state)
+
+        if(tagType === 0) {
+            return { buffer: fileBuffer, changed: false }
+        }
+
+        this.copyNbtName(fileBuffer, state)
+        this.copyOrRewriteNbtPayload(fileBuffer, state, tagType, null)
+
+        if(state.offset !== fileBuffer.length) {
+            state.chunks.push(fileBuffer.subarray(state.offset))
+        }
+
+        return {
+            buffer: state.changed ? Buffer.concat(state.chunks) : fileBuffer,
+            changed: state.changed
+        }
+    }
+
+    readNbtTagType(fileBuffer, state) {
+        this.assertNbtReadable(fileBuffer, state, 1)
+        const start = state.offset
+        const tagType = fileBuffer.readUInt8(state.offset)
+        state.offset += 1
+        state.chunks.push(fileBuffer.subarray(start, state.offset))
+        return tagType
+    }
+
+    copyNbtName(fileBuffer, state) {
+        this.assertNbtReadable(fileBuffer, state, 2)
+        const start = state.offset
+        const nameLength = fileBuffer.readUInt16BE(state.offset)
+        state.offset += 2
+        this.assertNbtReadable(fileBuffer, state, nameLength)
+        const nameStart = state.offset
+        state.offset += nameLength
+        state.chunks.push(fileBuffer.subarray(start, state.offset))
+        return fileBuffer.toString('utf8', nameStart, state.offset)
+    }
+
+    copyOrRewriteNbtPayload(fileBuffer, state, tagType, tagName) {
+        switch(tagType) {
+            case 1:
+                this.copyNbtBytes(fileBuffer, state, 1)
+                break
+            case 2:
+                this.copyNbtBytes(fileBuffer, state, 2)
+                break
+            case 3:
+            case 5:
+                this.copyNbtBytes(fileBuffer, state, 4)
+                break
+            case 4:
+            case 6:
+                this.copyNbtBytes(fileBuffer, state, 8)
+                break
+            case 7:
+                this.copyNbtArrayPayload(fileBuffer, state, 1)
+                break
+            case 8:
+                this.copyOrRewriteNbtStringPayload(fileBuffer, state, tagName)
+                break
+            case 9:
+                this.copyOrRewriteNbtListPayload(fileBuffer, state)
+                break
+            case 10:
+                this.copyOrRewriteNbtCompoundPayload(fileBuffer, state)
+                break
+            case 11:
+                this.copyNbtArrayPayload(fileBuffer, state, 4)
+                break
+            case 12:
+                this.copyNbtArrayPayload(fileBuffer, state, 8)
+                break
+            default:
+                throw new Error(`Unsupported NBT tag type ${tagType}`)
+        }
+    }
+
+    copyOrRewriteNbtStringPayload(fileBuffer, state, tagName) {
+        this.assertNbtReadable(fileBuffer, state, 2)
+        const start = state.offset
+        const stringLength = fileBuffer.readUInt16BE(state.offset)
+        state.offset += 2
+        this.assertNbtReadable(fileBuffer, state, stringLength)
+        const valueStart = state.offset
+        state.offset += stringLength
+        const value = fileBuffer.toString('utf8', valueStart, state.offset)
+
+        if(tagName === 'ip' && LEGACY_POKEVILL_SERVER_ADDRESSES.includes(value)) {
+            const addressBuffer = Buffer.from(CURRENT_POKEVILL_SERVER_ADDRESS, 'utf8')
+            const lengthBuffer = Buffer.alloc(2)
+            lengthBuffer.writeUInt16BE(addressBuffer.length)
+            state.chunks.push(lengthBuffer, addressBuffer)
+            state.changed = true
+            return
+        }
+
+        state.chunks.push(fileBuffer.subarray(start, state.offset))
+    }
+
+    copyOrRewriteNbtListPayload(fileBuffer, state) {
+        this.assertNbtReadable(fileBuffer, state, 5)
+        const start = state.offset
+        const elementType = fileBuffer.readUInt8(state.offset)
+        state.offset += 1
+        const listLength = fileBuffer.readInt32BE(state.offset)
+        state.offset += 4
+        state.chunks.push(fileBuffer.subarray(start, state.offset))
+
+        for(let i = 0; i < listLength; i++) {
+            this.copyOrRewriteNbtPayload(fileBuffer, state, elementType, null)
+        }
+    }
+
+    copyOrRewriteNbtCompoundPayload(fileBuffer, state) {
+        while(true) {
+            const tagType = this.readNbtTagType(fileBuffer, state)
+
+            if(tagType === 0) {
+                return
+            }
+
+            const tagName = this.copyNbtName(fileBuffer, state)
+            this.copyOrRewriteNbtPayload(fileBuffer, state, tagType, tagName)
+        }
+    }
+
+    copyNbtArrayPayload(fileBuffer, state, elementSize) {
+        this.assertNbtReadable(fileBuffer, state, 4)
+        const start = state.offset
+        const arrayLength = fileBuffer.readInt32BE(state.offset)
+        state.offset += 4
+        this.copyNbtBytes(fileBuffer, state, arrayLength * elementSize, start)
+    }
+
+    copyNbtBytes(fileBuffer, state, byteLength, start = state.offset) {
+        this.assertNbtReadable(fileBuffer, state, byteLength)
+        state.offset += byteLength
+        state.chunks.push(fileBuffer.subarray(start, state.offset))
+    }
+
+    assertNbtReadable(fileBuffer, state, byteLength) {
+        if(byteLength < 0 || state.offset + byteLength > fileBuffer.length) {
+            throw new Error('Unexpected end of NBT data')
         }
     }
 
