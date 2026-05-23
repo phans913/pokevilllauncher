@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.10 - 2026-05-23
+- Changed the launcher server address, default multiplayer server list, and default last server value to `pokevill.mcv.kr`.
+- Published a fresh GitHub Release asset set under `v1.0.10`.
+
 ## 1.0.9 - 2026-05-23
 - Corrected the GitHub Release asset URL mapping for `pokevillgacha-1.0.0 (2).jar`.
 - Published a fresh GitHub Release asset set under `v1.0.9`.

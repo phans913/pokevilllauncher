@@ -50,7 +50,7 @@ highContrast:false
 narratorHotkey:true
 resourcePacks:["vanilla","mod_resources","file/build.zip","file/pokevill.zip"]
 incompatibleResourcePacks:[]
-lastServer:pokevill.r-e.kr
+lastServer:pokevill.mcv.kr
 lang:ko_kr
 chatVisibility:0
 chatOpacity:1.0
