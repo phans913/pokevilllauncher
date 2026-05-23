@@ -6,7 +6,7 @@ const AdmZip = require('adm-zip')
 
 const CURSEFORGE_NEOFORGE_JSON = 'C:\\Users\\JISUNG\\curseforge\\minecraft\\Install\\versions\\neoforge-21.1.220\\neoforge-21.1.220.json'
 const OUTPUT_JSON = path.join(__dirname, 'distribution.json')
-const APP_VERSION = '1.0.8'
+const APP_VERSION = '1.0.9'
 const SERVER_NAME = 'Pokevill'
 const SERVER_ADDRESS = 'pokevill.r-e.kr'
 const GITHUB_RELEASE_REPOSITORY = 'phans913/pokevilllauncher'
@@ -30,7 +30,13 @@ function getGithubReleaseAssetName(relativePath) {
         return 'neoforge-21.1.220.json'
     }
 
-    return path.basename(normalizedPath)
+    const assetName = path.basename(normalizedPath)
+
+    if(assetName === 'pokevillgacha-1.0.0 (2).jar') {
+        return 'pokevillgacha-1.0.0.2.jar'
+    }
+
+    return assetName
 }
 
 function resolveArtifactUrl(relativePath) {

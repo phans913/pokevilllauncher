@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.9 - 2026-05-23
+- Corrected the GitHub Release asset URL mapping for `pokevillgacha-1.0.0 (2).jar`.
+- Published a fresh GitHub Release asset set under `v1.0.9`.
+
 ## 1.0.8 - 2026-05-23
 - Replaced the launcher mod and resource pack source with `포켓빌 프록시 docker/포켓빌 최종 모드팩`.
 - Set the default selected resource packs to `build.zip` and `pokevill.zip`.
