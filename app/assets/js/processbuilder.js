@@ -47,6 +47,7 @@ class ProcessBuilder {
     build(){
         fs.ensureDirSync(this.gameDir)
         this.ensureInitialMinecraftDefaults()
+        this.ensureDefaultShaderConfig()
         const tempNativePath = path.join(os.tmpdir(), ConfigManager.getTempNativeFolder(), crypto.pseudoRandomBytes(16).toString('hex'))
         process.throwDeprecation = true
         this.setupLiteLoader()
@@ -117,6 +118,7 @@ class ProcessBuilder {
         // 이 구현의 의도는 사용자의 설정을 매 실행마다 덮지 않고, 포켓빌 런처 첫 실행 1회에만 기본값을 주입하는 것이다.
         this.copyBundledDefaultFile('options.txt')
         this.copyBundledDefaultFile('servers.dat')
+        this.copyBundledDefaultPath(path.join('config', 'iris.properties'))
 
         fs.writeJsonSync(markerPath, {
             server: this.server.rawServer.id,
@@ -127,12 +129,27 @@ class ProcessBuilder {
     }
 
     copyBundledDefaultFile(fileName) {
-        const defaultPath = path.join(__dirname, '..', 'defaults', fileName)
-        const gamePath = path.join(this.gameDir, fileName)
+        this.copyBundledDefaultPath(fileName)
+    }
+
+    copyBundledDefaultPath(relativePath) {
+        const defaultPath = path.join(__dirname, '..', 'defaults', relativePath)
+        const gamePath = path.join(this.gameDir, relativePath)
 
         if(fs.existsSync(defaultPath)) {
+            fs.ensureDirSync(path.dirname(gamePath))
             fs.copyFileSync(defaultPath, gamePath)
-            logger.info(`Default ${fileName} copied:`, gamePath)
+            logger.info(`Default ${relativePath} copied:`, gamePath)
+        }
+    }
+
+    ensureDefaultShaderConfig() {
+        const relativePath = path.join('config', 'iris.properties')
+        const gamePath = path.join(this.gameDir, relativePath)
+
+        // 이 구현의 의도는 기존 유저가 Iris 설정을 직접 만든 경우 보존하고, 설정 파일이 없는 인스턴스에만 기본 쉐이더를 켜는 것이다.
+        if(!fs.existsSync(gamePath)) {
+            this.copyBundledDefaultPath(relativePath)
         }
     }
 
