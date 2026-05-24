@@ -93,7 +93,7 @@ function hasRequiredBundleFiles(serverId) {
         // Iris / Sodium 번들이 추가되면 이전 캐시가 "완료"로 오판되지 않도록 필수 파일에 포함한다.
         { path: nodePath.join(commonModStore, 'mods', 'iris-neoforge-1.8.12+mc1.21.1.jar'), size: 2438548 },
         { path: nodePath.join(commonModStore, 'mods', 'pamhc2crops-NEOFORGE-1.21.1-1.0.0.jar'), size: 1047144 },
-        { path: nodePath.join(commonModStore, 'mods', 'pokemonquest-1.0.23.jar'), size: 2091749 },
+        { path: nodePath.join(commonModStore, 'mods', 'pokemonquest-1.0.25.jar'), size: 2094771 },
         { path: nodePath.join(commonModStore, 'mods', 'pokevill-1.0.0.jar'), size: 89044 },
         { path: nodePath.join(commonModStore, 'mods', 'pokevillgacha-1.0.0 (2).jar'), size: 348682 },
         { path: nodePath.join(commonModStore, 'mods', 'sodium-neoforge-0.6.13+mc1.21.1.jar'), size: 1162994 },

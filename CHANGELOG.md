@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.15 - 2026-05-24
+- Replaced the bundled `pokemonquest` mod with `pokemonquest-1.0.25.jar`.
+- Updated the launcher bundle freshness check and release bundle URL for `v1.0.15`.
+
 ## 1.0.14 - 2026-05-24
 - Changed the launcher autoconnect address, default server list address, and default last server value to `reade.p-e.kr`.
 - Reworked the existing-user server list migration so `servers.dat` can be updated even when the replacement address length changes.
