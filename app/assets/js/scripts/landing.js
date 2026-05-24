@@ -90,6 +90,7 @@ function hasRequiredBundleFiles(serverId) {
         { path: nodePath.join(commonLibraries, 'net', 'neoforged', 'neoforge', '21.1.220', 'neoforge-21.1.220.jar') },
         { path: nodePath.join(commonVersions, 'neoforge-21.1.220', 'neoforge-21.1.220.json') },
         { path: nodePath.join(commonModStore, 'mods', 'Pixelmon-1.21.1-9.3.14-universal.jar'), size: 392190454 },
+        { path: nodePath.join(commonModStore, 'mods', 'borderless-neoforge-1.21.1-1.7.5_1-all.jar'), size: 47359 },
         // Iris / Sodium 번들이 추가되면 이전 캐시가 "완료"로 오판되지 않도록 필수 파일에 포함한다.
         { path: nodePath.join(commonModStore, 'mods', 'iris-neoforge-1.8.12+mc1.21.1.jar'), size: 2438548 },
         { path: nodePath.join(commonModStore, 'mods', 'pamhc2crops-NEOFORGE-1.21.1-1.0.0.jar'), size: 1047144 },
