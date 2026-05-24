@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.16 - 2026-05-24
+- Replaced the bundled `pokevillgacha` mod with `pokevillgacha-1.0.0 (3).jar`.
+- Updated the launcher bundle freshness check and release asset mapping for `v1.0.16`.
+
 ## 1.0.15 - 2026-05-24
 - Replaced the bundled `pokemonquest` mod with `pokemonquest-1.0.25.jar`.
 - Updated the launcher bundle freshness check and release bundle URL for `v1.0.15`.

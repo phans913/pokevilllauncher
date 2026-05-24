@@ -95,7 +95,7 @@ function hasRequiredBundleFiles(serverId) {
         { path: nodePath.join(commonModStore, 'mods', 'pamhc2crops-NEOFORGE-1.21.1-1.0.0.jar'), size: 1047144 },
         { path: nodePath.join(commonModStore, 'mods', 'pokemonquest-1.0.25.jar'), size: 2094771 },
         { path: nodePath.join(commonModStore, 'mods', 'pokevill-1.0.0.jar'), size: 89044 },
-        { path: nodePath.join(commonModStore, 'mods', 'pokevillgacha-1.0.0 (2).jar'), size: 348682 },
+        { path: nodePath.join(commonModStore, 'mods', 'pokevillgacha-1.0.0 (3).jar'), size: 351133 },
         { path: nodePath.join(commonModStore, 'mods', 'sodium-neoforge-0.6.13+mc1.21.1.jar'), size: 1162994 },
         { path: nodePath.join(commonModStore, 'mods', 'voicechat-neoforge-1.21.1-2.6.12.jar'), size: 4890489 },
         { path: nodePath.join(commonModStore, 'mods', 'worldedit-mod-7.3.8.jar'), size: 6222854 },
