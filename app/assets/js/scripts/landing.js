@@ -101,7 +101,7 @@ function hasRequiredBundleFiles(serverId) {
         { path: nodePath.join(commonModStore, 'mods', 'voicechat-neoforge-1.21.1-2.6.12.jar'), size: 4890489 },
         { path: nodePath.join(commonModStore, 'mods', 'worldedit-mod-7.3.8.jar'), size: 6222854 },
         { path: nodePath.join(instanceDir, 'resourcepacks', 'build.zip'), size: 4268569 },
-        { path: nodePath.join(instanceDir, 'resourcepacks', 'pokevill.zip'), size: 30477681 },
+        { path: nodePath.join(instanceDir, 'resourcepacks', 'pokevill.zip'), size: 30514651 },
         { path: nodePath.join(instanceDir, 'shaderpacks', 'ComplementaryUnbound_r5.5.1.zip'), size: 459175 }
     ]
 

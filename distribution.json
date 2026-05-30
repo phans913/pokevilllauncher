@@ -1,5 +1,5 @@
 {
-  "version": "1.0.17",
+  "version": "1.0.18",
   "servers": [
     {
       "id": "pokevill",
@@ -670,11 +670,11 @@
           "name": "pokevill.zip",
           "type": "File",
           "artifact": {
-            "size": 30477681,
+            "size": 30514651,
             "MD5": null,
-            "hash": "7dd97d22d113633751a4732e7b1a273193b7609c",
+            "hash": "a4380f53e06dc15858602369d8ad448edda06e10",
             "path": "resourcepacks/pokevill.zip",
-            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.17/pokevill.zip"
+            "url": "https://github.com/phans913/pokevilllauncher/releases/download/v1.0.18/pokevill.zip"
           }
         },
         {

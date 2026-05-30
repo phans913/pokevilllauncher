@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.18 - 2026-05-31
+- Replaced the bundled `pokevill.zip` resource pack with the current integrated PokeVill pack.
+- Updated the launcher resource pack artifact mapping and bundle freshness check for `v1.0.18`.
+
 ## 1.0.17 - 2026-05-24
 - Added `borderless-neoforge-1.21.1-1.7.5_1-all.jar` to the bundled launcher modpack.
 - Updated the launcher bundle freshness check and release bundle URL for `v1.0.17`.
