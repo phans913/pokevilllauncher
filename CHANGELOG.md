@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.21 - 2026-05-31
+- Restored `build.zip` to the bundled resource packs and required bundle freshness check.
+- Restored the default selected resource packs to `build.zip` and `pokevill.zip`.
+- Added `pamhcpokevill-1.0.0.jar` to the bundled launcher modpack.
+
 ## 1.0.20 - 2026-05-31
 - Republished the `pokevill.zip` resource pack and tutorial server update under `v1.0.20` after GitHub locked the attempted `v1.0.19` release tag.
 - Updated all launcher download URLs and bundle freshness checks for `v1.0.20`.

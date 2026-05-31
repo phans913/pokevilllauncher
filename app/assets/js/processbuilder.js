@@ -611,8 +611,8 @@ class ProcessBuilder {
 
         let optionsText = fs.readFileSync(gameOptionsPath, 'UTF-8')
 
-        // 런처로 접속할 때마다 포켓빌 리소스팩 하나가 선택된 상태가 되도록 리소스팩 설정만 고정한다.
-        optionsText = this.replaceOrAppendOption(optionsText, 'resourcePacks', 'resourcePacks:["vanilla","mod_resources","file/pokevill.zip"]')
+        // 런처로 접속할 때마다 포켓빌 리소스팩 두 개가 선택된 상태가 되도록 리소스팩 설정만 고정한다.
+        optionsText = this.replaceOrAppendOption(optionsText, 'resourcePacks', 'resourcePacks:["vanilla","mod_resources","file/build.zip","file/pokevill.zip"]')
         optionsText = this.replaceOrAppendOption(optionsText, 'incompatibleResourcePacks', 'incompatibleResourcePacks:[]')
 
         fs.writeFileSync(gameOptionsPath, optionsText, 'UTF-8')

@@ -6,7 +6,7 @@ const AdmZip = require('adm-zip')
 
 const CURSEFORGE_NEOFORGE_JSON = 'C:\\Users\\JISUNG\\curseforge\\minecraft\\Install\\versions\\neoforge-21.1.220\\neoforge-21.1.220.json'
 const OUTPUT_JSON = path.join(__dirname, 'distribution.json')
-const APP_VERSION = '1.0.20'
+const APP_VERSION = '1.0.21'
 const SERVER_NAME = 'Pokevill'
 const SERVER_ADDRESS = 'reade.p-e.kr'
 const TUTORIAL_SERVER_NAME = '튜토리얼 서버'
@@ -20,9 +20,13 @@ const USE_GOOGLE_DRIVE = fs.existsSync(GOOGLE_DRIVE_MANIFEST)
 const googleDriveFiles = USE_GOOGLE_DRIVE ? JSON.parse(fs.readFileSync(GOOGLE_DRIVE_MANIFEST, 'utf8')) : {}
 const SOURCE_MODPACK_DIR = path.join(__dirname, '..', '포켓빌 프록시 docker', '포켓빌 최종 모드팩')
 const SOURCE_SHADERPACK = path.join(__dirname, '..', '포켓빌 프록시 docker', DEFAULT_SHADERPACK)
+const SOURCE_BUILD_RESOURCEPACK = path.join(__dirname, '..', 'build.zip')
+const EXTRA_MODS = [
+    path.join(__dirname, '..', 'pamhcpokevill-1.0.0.jar')
+]
 const BUNDLE_ROOT = path.join(__dirname, 'Pokevill_GoogleDrive_Bundle')
 const DEFAULTS_DIR = path.join(__dirname, 'app', 'assets', 'defaults')
-const INCLUDED_RESOURCEPACKS = new Set(['pokevill.zip', 'pokevill (2).zip'])
+const INCLUDED_RESOURCEPACKS = new Set(['build.zip', 'pokevill.zip', 'pokevill (2).zip'])
 
 function getGoogleDriveDownloadUrl(fileId) {
     return `https://drive.google.com/uc?export=download&id=${fileId}`
@@ -133,6 +137,8 @@ function syncModpackContent(bundleRoot) {
             }
         }
 
+        ensureExtraMods(targetModsDir)
+
         for(const fileName of fs.readdirSync(sourceResourcepacksDir)) {
             const sourcePath = path.join(sourceResourcepacksDir, fileName)
             if(fs.statSync(sourcePath).isFile() && fileName.toLowerCase().endsWith('.zip') && INCLUDED_RESOURCEPACKS.has(fileName)) {
@@ -141,12 +147,37 @@ function syncModpackContent(bundleRoot) {
             }
         }
 
+        ensureBuildResourcepack(targetResourcepacksDir)
         fs.copyFileSync(sourceShaderpack, path.join(targetShaderpacksDir, DEFAULT_SHADERPACK))
     } finally {
         if(sourceModpack.cleanup) {
             sourceModpack.cleanup()
         }
     }
+}
+
+function ensureExtraMods(targetModsDir) {
+    for(const sourceMod of EXTRA_MODS) {
+        if(!fs.existsSync(sourceMod)) {
+            throw new Error(`Required extra mod not found: ${sourceMod}`)
+        }
+
+        fs.copyFileSync(sourceMod, path.join(targetModsDir, path.basename(sourceMod)))
+    }
+}
+
+function ensureBuildResourcepack(targetResourcepacksDir) {
+    const targetPath = path.join(targetResourcepacksDir, 'build.zip')
+
+    if(fs.existsSync(targetPath)) {
+        return
+    }
+
+    if(!fs.existsSync(SOURCE_BUILD_RESOURCEPACK)) {
+        throw new Error(`Required build resourcepack not found: ${SOURCE_BUILD_RESOURCEPACK}`)
+    }
+
+    fs.copyFileSync(SOURCE_BUILD_RESOURCEPACK, targetPath)
 }
 
 function resolveSourceModpackDir(targetModpackDir) {
