@@ -14,6 +14,8 @@ const logger = LoggerUtil.getLogger('ProcessBuilder')
 
 const CURRENT_POKEVILL_SERVER_ADDRESS = 'reade.p-e.kr'
 const LEGACY_POKEVILL_SERVER_ADDRESSES = ['pokevill.r-e.kr', 'pokevill.mcv.kr']
+const TUTORIAL_SERVER_NAME = '튜토리얼 서버'
+const TUTORIAL_SERVER_ADDRESS = 'moseory.ddns.net'
 
 
 /**
@@ -168,6 +170,7 @@ class ProcessBuilder {
             this.copyBundledDefaultFile('servers.dat')
         } else {
             this.replaceLegacyServerAddressInBinaryFile(serversPath)
+            this.ensureTutorialServerInBinaryFile(serversPath)
         }
     }
 
@@ -210,6 +213,226 @@ class ProcessBuilder {
             fs.writeFileSync(filePath, migration.buffer)
             logger.info('Pokevill server address migrated in binary file:', filePath)
         }
+    }
+
+    ensureTutorialServerInBinaryFile(filePath) {
+        if(!fs.existsSync(filePath)) {
+            return
+        }
+
+        let migration
+
+        try {
+            migration = this.appendTutorialServerToNbtBuffer(fs.readFileSync(filePath))
+        } catch(err) {
+            logger.warn('Skipping tutorial server insertion because servers.dat could not be parsed:', err)
+            return
+        }
+
+        if(migration.changed) {
+            fs.writeFileSync(filePath, migration.buffer)
+            logger.info('Tutorial server added to servers.dat:', filePath)
+        }
+    }
+
+    appendTutorialServerToNbtBuffer(fileBuffer) {
+        if(fileBuffer.includes(Buffer.from(TUTORIAL_SERVER_ADDRESS, 'utf8'))) {
+            return { buffer: fileBuffer, changed: false }
+        }
+
+        const serversList = this.findServersListInNbtBuffer(fileBuffer)
+        const nextLength = Buffer.alloc(4)
+        nextLength.writeInt32BE(serversList.length + 1)
+
+        // 이 구현의 의도는 기존 유저의 서버 목록은 그대로 두고 튜토리얼 서버만 마지막에 보존 추가하는 것이다.
+        return {
+            buffer: Buffer.concat([
+                fileBuffer.subarray(0, serversList.lengthOffset),
+                nextLength,
+                fileBuffer.subarray(serversList.lengthOffset + 4, serversList.endOffset),
+                this.createServerCompound(TUTORIAL_SERVER_NAME, TUTORIAL_SERVER_ADDRESS),
+                fileBuffer.subarray(serversList.endOffset)
+            ]),
+            changed: true
+        }
+    }
+
+    findServersListInNbtBuffer(fileBuffer) {
+        const state = { offset: 0 }
+        const rootType = this.skipReadNbtTagType(fileBuffer, state)
+
+        if(rootType !== 10) {
+            throw new Error('servers.dat root tag is not a compound')
+        }
+
+        this.skipReadNbtName(fileBuffer, state)
+
+        while(true) {
+            const tagType = this.skipReadNbtTagType(fileBuffer, state)
+
+            if(tagType === 0) {
+                throw new Error('servers list not found')
+            }
+
+            const tagName = this.skipReadNbtName(fileBuffer, state)
+
+            if(tagType === 9 && tagName === 'servers') {
+                this.assertNbtReadable(fileBuffer, state, 5)
+                const elementType = fileBuffer.readUInt8(state.offset)
+                state.offset += 1
+                const lengthOffset = state.offset
+                const listLength = fileBuffer.readInt32BE(state.offset)
+                state.offset += 4
+
+                if(elementType !== 10) {
+                    throw new Error('servers list is not a compound list')
+                }
+
+                for(let i = 0; i < listLength; i++) {
+                    this.skipNbtPayload(fileBuffer, state, elementType)
+                }
+
+                return {
+                    length: listLength,
+                    lengthOffset,
+                    endOffset: state.offset
+                }
+            }
+
+            this.skipNbtPayload(fileBuffer, state, tagType)
+        }
+    }
+
+    skipReadNbtTagType(fileBuffer, state) {
+        this.assertNbtReadable(fileBuffer, state, 1)
+        const tagType = fileBuffer.readUInt8(state.offset)
+        state.offset += 1
+        return tagType
+    }
+
+    skipReadNbtName(fileBuffer, state) {
+        this.assertNbtReadable(fileBuffer, state, 2)
+        const nameLength = fileBuffer.readUInt16BE(state.offset)
+        state.offset += 2
+        this.assertNbtReadable(fileBuffer, state, nameLength)
+        const nameStart = state.offset
+        state.offset += nameLength
+        return fileBuffer.toString('utf8', nameStart, state.offset)
+    }
+
+    skipNbtPayload(fileBuffer, state, tagType) {
+        switch(tagType) {
+            case 1:
+                this.skipNbtBytes(fileBuffer, state, 1)
+                break
+            case 2:
+                this.skipNbtBytes(fileBuffer, state, 2)
+                break
+            case 3:
+            case 5:
+                this.skipNbtBytes(fileBuffer, state, 4)
+                break
+            case 4:
+            case 6:
+                this.skipNbtBytes(fileBuffer, state, 8)
+                break
+            case 7:
+                this.skipNbtArrayPayload(fileBuffer, state, 1)
+                break
+            case 8:
+                this.skipNbtStringPayload(fileBuffer, state)
+                break
+            case 9:
+                this.skipNbtListPayload(fileBuffer, state)
+                break
+            case 10:
+                this.skipNbtCompoundPayload(fileBuffer, state)
+                break
+            case 11:
+                this.skipNbtArrayPayload(fileBuffer, state, 4)
+                break
+            case 12:
+                this.skipNbtArrayPayload(fileBuffer, state, 8)
+                break
+            default:
+                throw new Error(`Unsupported NBT tag type ${tagType}`)
+        }
+    }
+
+    skipNbtBytes(fileBuffer, state, byteLength) {
+        this.assertNbtReadable(fileBuffer, state, byteLength)
+        state.offset += byteLength
+    }
+
+    skipNbtStringPayload(fileBuffer, state) {
+        this.assertNbtReadable(fileBuffer, state, 2)
+        const stringLength = fileBuffer.readUInt16BE(state.offset)
+        state.offset += 2
+        this.skipNbtBytes(fileBuffer, state, stringLength)
+    }
+
+    skipNbtArrayPayload(fileBuffer, state, elementSize) {
+        this.assertNbtReadable(fileBuffer, state, 4)
+        const length = fileBuffer.readInt32BE(state.offset)
+        state.offset += 4
+        this.skipNbtBytes(fileBuffer, state, length * elementSize)
+    }
+
+    skipNbtListPayload(fileBuffer, state) {
+        this.assertNbtReadable(fileBuffer, state, 5)
+        const elementType = fileBuffer.readUInt8(state.offset)
+        state.offset += 1
+        const listLength = fileBuffer.readInt32BE(state.offset)
+        state.offset += 4
+
+        for(let i = 0; i < listLength; i++) {
+            this.skipNbtPayload(fileBuffer, state, elementType)
+        }
+    }
+
+    skipNbtCompoundPayload(fileBuffer, state) {
+        while(true) {
+            const tagType = this.skipReadNbtTagType(fileBuffer, state)
+
+            if(tagType === 0) {
+                return
+            }
+
+            this.skipReadNbtName(fileBuffer, state)
+            this.skipNbtPayload(fileBuffer, state, tagType)
+        }
+    }
+
+    createNbtName(value) {
+        const valueBuffer = Buffer.from(value, 'utf8')
+        const lengthBuffer = Buffer.alloc(2)
+        lengthBuffer.writeUInt16BE(valueBuffer.length)
+        return Buffer.concat([lengthBuffer, valueBuffer])
+    }
+
+    createNbtStringTag(name, value) {
+        return Buffer.concat([
+            Buffer.from([0x08]),
+            this.createNbtName(name),
+            this.createNbtName(value)
+        ])
+    }
+
+    createNbtByteTag(name, value) {
+        return Buffer.concat([
+            Buffer.from([0x01]),
+            this.createNbtName(name),
+            Buffer.from([value])
+        ])
+    }
+
+    createServerCompound(name, address) {
+        return Buffer.concat([
+            this.createNbtStringTag('name', name),
+            this.createNbtStringTag('ip', address),
+            this.createNbtByteTag('acceptTextures', 1),
+            Buffer.from([0x00])
+        ])
     }
 
     rewriteLegacyServerAddressInNbtBuffer(fileBuffer) {
@@ -388,8 +611,8 @@ class ProcessBuilder {
 
         let optionsText = fs.readFileSync(gameOptionsPath, 'UTF-8')
 
-        // 런처로 접속할 때마다 포켓빌 리소스팩 두 개가 선택된 상태가 되도록 리소스팩 설정만 고정한다.
-        optionsText = this.replaceOrAppendOption(optionsText, 'resourcePacks', 'resourcePacks:["vanilla","mod_resources","file/pokevill.zip","file/build.zip"]')
+        // 런처로 접속할 때마다 포켓빌 리소스팩 하나가 선택된 상태가 되도록 리소스팩 설정만 고정한다.
+        optionsText = this.replaceOrAppendOption(optionsText, 'resourcePacks', 'resourcePacks:["vanilla","mod_resources","file/pokevill.zip"]')
         optionsText = this.replaceOrAppendOption(optionsText, 'incompatibleResourcePacks', 'incompatibleResourcePacks:[]')
 
         fs.writeFileSync(gameOptionsPath, optionsText, 'UTF-8')

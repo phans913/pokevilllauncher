@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.19 - 2026-05-31
+- Kept the bundled/default resource pack selection on `pokevill.zip`.
+- Added a default tutorial server entry named `튜토리얼 서버` pointing to `moseory.ddns.net`.
+- Added a server-list migration that appends the tutorial server to existing `servers.dat` files without replacing user entries.
+
 ## 1.0.18 - 2026-05-31
 - Replaced the bundled `pokevill.zip` resource pack with the current integrated PokeVill pack.
 - Updated the launcher resource pack artifact mapping and bundle freshness check for `v1.0.18`.

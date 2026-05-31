@@ -48,7 +48,7 @@ mouseSensitivity:0.5
 damageTiltStrength:1.0
 highContrast:false
 narratorHotkey:true
-resourcePacks:["vanilla","mod_resources","file/build.zip","file/pokevill.zip"]
+resourcePacks:["vanilla","mod_resources","file/pokevill.zip"]
 incompatibleResourcePacks:[]
 lastServer:reade.p-e.kr
 lang:ko_kr

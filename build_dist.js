@@ -6,9 +6,11 @@ const AdmZip = require('adm-zip')
 
 const CURSEFORGE_NEOFORGE_JSON = 'C:\\Users\\JISUNG\\curseforge\\minecraft\\Install\\versions\\neoforge-21.1.220\\neoforge-21.1.220.json'
 const OUTPUT_JSON = path.join(__dirname, 'distribution.json')
-const APP_VERSION = '1.0.17'
+const APP_VERSION = '1.0.19'
 const SERVER_NAME = 'Pokevill'
 const SERVER_ADDRESS = 'reade.p-e.kr'
+const TUTORIAL_SERVER_NAME = '튜토리얼 서버'
+const TUTORIAL_SERVER_ADDRESS = 'moseory.ddns.net'
 const DEFAULT_SHADERPACK = 'ComplementaryUnbound_r5.5.1.zip'
 const GITHUB_RELEASE_REPOSITORY = 'phans913/pokevilllauncher'
 const GITHUB_RELEASE_TAG = `v${APP_VERSION}`
@@ -20,6 +22,7 @@ const SOURCE_MODPACK_DIR = path.join(__dirname, '..', '포켓빌 프록시 docke
 const SOURCE_SHADERPACK = path.join(__dirname, '..', '포켓빌 프록시 docker', DEFAULT_SHADERPACK)
 const BUNDLE_ROOT = path.join(__dirname, 'Pokevill_GoogleDrive_Bundle')
 const DEFAULTS_DIR = path.join(__dirname, 'app', 'assets', 'defaults')
+const INCLUDED_RESOURCEPACKS = new Set(['pokevill.zip', 'pokevill (2).zip'])
 
 function getGoogleDriveDownloadUrl(fileId) {
     return `https://drive.google.com/uc?export=download&id=${fileId}`
@@ -103,38 +106,80 @@ function syncModpackContent(bundleRoot) {
     const targetModsDir = path.join(targetModpackDir, 'mods')
     const targetResourcepacksDir = path.join(targetModpackDir, 'resourcepacks')
     const targetShaderpacksDir = path.join(targetModpackDir, 'shaderpacks')
-    const sourceModsDir = path.join(SOURCE_MODPACK_DIR, 'mods')
-    const sourceResourcepacksDir = path.join(SOURCE_MODPACK_DIR, 'resourcepacks')
+    const sourceModpack = resolveSourceModpackDir(targetModpackDir)
+    const sourceModsDir = path.join(sourceModpack.dir, 'mods')
+    const sourceResourcepacksDir = path.join(sourceModpack.dir, 'resourcepacks')
 
-    if(!fs.existsSync(SOURCE_MODPACK_DIR)) {
+    try {
+        const sourceShaderpack = resolveSourceShaderpack(sourceModpack.dir)
+
+        if(!fs.existsSync(sourceModsDir)) {
+            throw new Error(`Source mods directory not found: ${sourceModsDir}`)
+        }
+
+        if(!fs.existsSync(sourceResourcepacksDir)) {
+            throw new Error(`Source resourcepacks directory not found: ${sourceResourcepacksDir}`)
+        }
+
+        fs.rmSync(targetModpackDir, { recursive: true, force: true })
+        fs.mkdirSync(targetModsDir, { recursive: true })
+        fs.mkdirSync(targetResourcepacksDir, { recursive: true })
+        fs.mkdirSync(targetShaderpacksDir, { recursive: true })
+
+        for(const fileName of fs.readdirSync(sourceModsDir)) {
+            const sourcePath = path.join(sourceModsDir, fileName)
+            if(fs.statSync(sourcePath).isFile() && fileName.toLowerCase().endsWith('.jar')) {
+                fs.copyFileSync(sourcePath, path.join(targetModsDir, fileName))
+            }
+        }
+
+        for(const fileName of fs.readdirSync(sourceResourcepacksDir)) {
+            const sourcePath = path.join(sourceResourcepacksDir, fileName)
+            if(fs.statSync(sourcePath).isFile() && fileName.toLowerCase().endsWith('.zip') && INCLUDED_RESOURCEPACKS.has(fileName)) {
+                const targetName = normalizeResourcepackName(fileName)
+                copyRecursiveSync(sourcePath, path.join(targetResourcepacksDir, targetName))
+            }
+        }
+
+        fs.copyFileSync(sourceShaderpack, path.join(targetShaderpacksDir, DEFAULT_SHADERPACK))
+    } finally {
+        if(sourceModpack.cleanup) {
+            sourceModpack.cleanup()
+        }
+    }
+}
+
+function resolveSourceModpackDir(targetModpackDir) {
+    if(fs.existsSync(SOURCE_MODPACK_DIR)) {
+        return { dir: SOURCE_MODPACK_DIR, cleanup: null }
+    }
+
+    if(!fs.existsSync(targetModpackDir)) {
         throw new Error(`Source modpack not found: ${SOURCE_MODPACK_DIR}`)
     }
 
-    if(!fs.existsSync(SOURCE_SHADERPACK)) {
-        throw new Error(`Default shaderpack not found: ${SOURCE_SHADERPACK}`)
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pokevill-modpack-source-'))
+    copyRecursiveSync(targetModpackDir, tempDir)
+
+    return {
+        dir: tempDir,
+        cleanup: () => fs.rmSync(tempDir, { recursive: true, force: true })
     }
+}
 
-    fs.rmSync(targetModpackDir, { recursive: true, force: true })
-    fs.mkdirSync(targetModsDir, { recursive: true })
-    fs.mkdirSync(targetResourcepacksDir, { recursive: true })
-    fs.mkdirSync(targetShaderpacksDir, { recursive: true })
+function resolveSourceShaderpack(sourceModpackDir) {
+    const candidates = [
+        SOURCE_SHADERPACK,
+        path.join(sourceModpackDir, 'shaderpacks', DEFAULT_SHADERPACK)
+    ]
 
-    for(const fileName of fs.readdirSync(sourceModsDir)) {
-        const sourcePath = path.join(sourceModsDir, fileName)
-        if(fs.statSync(sourcePath).isFile() && fileName.toLowerCase().endsWith('.jar')) {
-            fs.copyFileSync(sourcePath, path.join(targetModsDir, fileName))
+    for(const candidate of candidates) {
+        if(fs.existsSync(candidate)) {
+            return candidate
         }
     }
 
-    for(const fileName of fs.readdirSync(sourceResourcepacksDir)) {
-        const sourcePath = path.join(sourceResourcepacksDir, fileName)
-        if(fs.statSync(sourcePath).isFile() && fileName.toLowerCase().endsWith('.zip')) {
-            const targetName = normalizeResourcepackName(fileName)
-            copyRecursiveSync(sourcePath, path.join(targetResourcepacksDir, targetName))
-        }
-    }
-
-    fs.copyFileSync(SOURCE_SHADERPACK, path.join(targetShaderpacksDir, DEFAULT_SHADERPACK))
+    throw new Error(`Default shaderpack not found. Checked: ${candidates.join(', ')}`)
 }
 
 function getSHA1(filePath) {
@@ -243,15 +288,13 @@ function nbtByte(name, value) {
 }
 
 function createServersDat() {
+    const serverEntries = [
+        { name: SERVER_NAME, address: SERVER_ADDRESS },
+        { name: TUTORIAL_SERVER_NAME, address: TUTORIAL_SERVER_ADDRESS }
+    ]
     const listLength = Buffer.alloc(4)
-    listLength.writeInt32BE(1)
-
-    const serverCompound = Buffer.concat([
-        nbtString('name', SERVER_NAME),
-        nbtString('ip', SERVER_ADDRESS),
-        nbtByte('acceptTextures', 1),
-        Buffer.from([0x00])
-    ])
+    listLength.writeInt32BE(serverEntries.length)
+    const serverCompounds = serverEntries.map(server => createServerCompound(server.name, server.address))
 
     return Buffer.concat([
         Buffer.from([0x0a]),
@@ -260,7 +303,16 @@ function createServersDat() {
         nbtName('servers'),
         Buffer.from([0x0a]),
         listLength,
-        serverCompound,
+        ...serverCompounds,
+        Buffer.from([0x00])
+    ])
+}
+
+function createServerCompound(name, address) {
+    return Buffer.concat([
+        nbtString('name', name),
+        nbtString('ip', address),
+        nbtByte('acceptTextures', 1),
         Buffer.from([0x00])
     ])
 }
