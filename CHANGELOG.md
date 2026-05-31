@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.20 - 2026-05-31
+- Republished the `pokevill.zip` resource pack and tutorial server update under `v1.0.20` after GitHub locked the attempted `v1.0.19` release tag.
+- Updated all launcher download URLs and bundle freshness checks for `v1.0.20`.
+
 ## 1.0.19 - 2026-05-31
 - Kept the bundled/default resource pack selection on `pokevill.zip`.
 - Added a default tutorial server entry named `튜토리얼 서버` pointing to `moseory.ddns.net`.
